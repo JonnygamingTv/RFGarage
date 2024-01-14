@@ -14,7 +14,7 @@ namespace RFGarage.Commands
 #if RELEASEPUNCH
     [CommandAliases("vl")]
 #else
-    [CommandAliases("gg")]
+    [CommandAliases("gg","glist","garagelist")]
 #endif
     [CommandPermissions("garages")]
     [CommandInfo("Get a list of vehicle in garage.", "/garages")]

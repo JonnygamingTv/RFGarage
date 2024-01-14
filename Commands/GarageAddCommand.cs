@@ -158,13 +158,14 @@ namespace RFGarage.Commands
                 }
             }
 
-            await ThreadTool.RunOnGameThreadAsync(() => { vehicle.forceRemoveAllPlayers(); });
+            //await ThreadTool.RunOnGameThreadAsync(() => { vehicle.forceRemoveAllPlayers(); });
             RFGarage.Plugin.Inst.IsProcessingGarage[player.CSteamID.m_SteamID] = DateTime.Now;
             RFGarage.Plugin.Inst.BusyVehicle.Add(vehicle.instanceID);
             var vehicleName = context.CommandRawArguments.Length == 0 ? vehicle.asset.vehicleName : string.Join(" ", context.CommandRawArguments);
             var garageContent = VehicleWrapper.Create(vehicle);
             await ThreadTool.RunOnGameThreadAsync(() =>
             {
+                vehicle.forceRemoveAllPlayers();
                 VehicleUtil.ClearTrunkAndBarricades(vehicle);
                 VehicleManager.askVehicleDestroy(vehicle);
             });

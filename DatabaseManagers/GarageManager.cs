@@ -127,7 +127,7 @@ namespace RFGarage.DatabaseManagers
             try
             {
                 var result = new List<PlayerGarage>();
-                using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString))
+                using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
                 {
                     var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                     var all = await col.FindAllAsync();
