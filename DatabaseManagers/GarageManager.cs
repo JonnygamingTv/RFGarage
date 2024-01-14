@@ -107,7 +107,7 @@ namespace RFGarage.DatabaseManagers
 
         private static void LiteDB_Init()
         {
-            using (var db = new LiteDB.LiteDatabase(DatabaseManager.LiteDB_ConnectionString))
+            using (var db = new LiteDB.LiteDatabase(DatabaseManager.LiteDB_ConnectionString,null))
             {
                 var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                 if (db.UserVersion == 0)
@@ -184,7 +184,7 @@ namespace RFGarage.DatabaseManagers
                 switch (Plugin.Conf.Database)
                 {
                     case EDatabase.LITEDB:
-                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString))
+                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
                         {
                             var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                             return await col.InsertAsync(playerGarage);
