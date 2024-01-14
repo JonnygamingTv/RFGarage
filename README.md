@@ -58,6 +58,6 @@ A RocketMod / LDM plugin to save/load vehicle to/from a virtual garage
 ```
 
 `<AutoGarageOnLeave>0</AutoGarageOnLeave>`:
--1 = disabled
-0 = instant
->0 = seconds until automatic gadd
+> -1 = disabled
+> 0 = instant
+> >0 = seconds until automatic gadd
