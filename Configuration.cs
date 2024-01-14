@@ -15,7 +15,7 @@ namespace RFGarage
         public bool AutoClearDestroyedVehicles;
         public bool AutoAddOnDrown;
         public string AutoAddOnDrownPermission;
-        public int AutoGarageOnLeave;
+        public float AutoGarageOnLeave;
         public bool AllowTrain;
         public int DefaultGarageSlot;
         public string GarageSlotPermissionPrefix;
@@ -31,7 +31,7 @@ namespace RFGarage
             AutoClearDestroyedVehicles = true;
             AutoAddOnDrown = true;
             AutoAddOnDrownPermission = "garagedrown";
-            AutoGarageOnLeave = 1800;
+            AutoGarageOnLeave = -1;
             AllowTrain = false;
             DefaultGarageSlot = 5;
             GarageSlotPermissionPrefix = "garageslot";

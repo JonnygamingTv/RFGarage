@@ -122,7 +122,7 @@ namespace RFGarage
             for(int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
             {
                 InteractableVehicle vehicle = VehicleManager.vehicles[veh];
-                if(!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner == player.CSteamID && Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
+                if(!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner == player.CSteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
                 {
                     _ = ToGarage(player, vehicle, vehicle.asset.vehicleName);
                 }
@@ -134,7 +134,7 @@ namespace RFGarage
             for (int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
             {
                 InteractableVehicle vehicle = VehicleManager.vehicles[veh];
-                if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner == player.CSteamID && Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
+                if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner == player.CSteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
                 {
                     vehicles.Add(vehicle);
                 }
@@ -157,6 +157,7 @@ namespace RFGarage
         }
         public async System.Threading.Tasks.Task ToGarage(Rocket.Unturned.Player.UnturnedPlayer player, InteractableVehicle vehicle, string vehicleName)
         {
+            Logger.Log("Saving "+vehicleName);
             foreach (var blacklist in RFGarage.Plugin.Conf.Blacklists.Where(x => x.Type == EBlacklistType.BARRICADE))
             {
                 if (player.HasPermission(blacklist.BypassPermission))
