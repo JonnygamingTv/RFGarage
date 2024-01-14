@@ -78,8 +78,8 @@
     <Reference Include="Dapper">
       <HintPath>..\..\Dapper.dll</HintPath>
     </Reference>
-    <Reference Include="LiteDB, Version=5.0.16.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27">
-      <HintPath>..\..\LiteDB.dll</HintPath>
+    <Reference Include="LiteDB, Version=5.0.11.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27">
+      <HintPath>..\..\LiteDB.v5.0.11.0.dll</HintPath>
     </Reference>
     <Reference Include="litedbasync, Version=0.0.11.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\litedbasync.0.0.11.dll</HintPath>
