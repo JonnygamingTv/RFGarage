@@ -151,7 +151,7 @@ namespace RFGarage
         private IEnumerator ToGarageSoon(Rocket.Unturned.Player.UnturnedPlayer player)
         {
             yield return new WaitForSeconds(Conf.AutoGarageOnLeave);
-            for (byte i = 0; i < vehicleQueue[player].Count; i++) if (vehicleQueue[player][i] && !vehicleQueue[player][i].isDead) _ = ToGarage(player, vehicleQueue[player][i], vehicleQueue[player][i].asset.vehicleName);
+            for (byte i = 0; i < vehicleQueue[player].Count; i++) if (vehicleQueue[player][i] && !vehicleQueue[player][i].isDead && vehicleQueue[player][i].lockedOwner.m_SteamID == player.CSteamID.m_SteamID) _ = ToGarage(player, vehicleQueue[player][i], vehicleQueue[player][i].asset.vehicleName);
             vehicleQueue.Remove(player);
             yield break;
         }
