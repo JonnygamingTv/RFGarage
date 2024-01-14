@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("RiceField Plugins")]
 [assembly: AssemblyProduct("RFGarage")]
-[assembly: AssemblyCopyright("Copyright © RiceField Plugins 2021")]
+[assembly: AssemblyCopyright("Copyright © RiceField Plugins 2021, JonHosting 2024")]
 [assembly: AssemblyTrademark("RiceField Plugins")]
 [assembly: AssemblyCulture("")]
 
