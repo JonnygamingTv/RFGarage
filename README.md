@@ -1,4 +1,63 @@
 # RFGarage
 A RocketMod / LDM plugin to save/load vehicle to/from a virtual garage
 
-Documentation soon...
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Enabled>true</Enabled>
+  <Database>LITEDB</Database>
+  <MySqlConnectionString>SERVER=127.0.0.1;DATABASE=unturned;UID=root;PASSWORD=123456;PORT=3306;TABLENAME=rfgarage;</MySqlConnectionString>
+  <MessageColor>magenta</MessageColor>
+  <MessageIconUrl>https://cdn.jsdelivr.net/gh/RiceField-Plugins/UnturnedImages@images/plugin/Announcer.png</MessageIconUrl>
+  <AutoClearDestroyedVehicles>true</AutoClearDestroyedVehicles>
+  <AutoAddOnDrown>true</AutoAddOnDrown>
+  <AutoAddOnDrownPermission>garagedrown</AutoAddOnDrownPermission>
+  <AutoGarageOnLeave>0</AutoGarageOnLeave>
+  <AllowTrain>false</AllowTrain>
+  <DefaultGarageSlot>5</DefaultGarageSlot>
+  <GarageSlotPermissionPrefix>garageslot</GarageSlotPermissionPrefix>
+  <Blacklists>
+    <Blacklist Type="BARRICADE" BypassPermission="garagebypass.barricade.example">
+      <IdList>
+        <Id>1</Id>
+        <Id>2</Id>
+      </IdList>
+    </Blacklist>
+    <Blacklist Type="ITEM" BypassPermission="garagebypass.item.example">
+      <IdList>
+        <Id>1</Id>
+        <Id>2</Id>
+      </IdList>
+    </Blacklist>
+    <Blacklist Type="VEHICLE" BypassPermission="garagebypass.vehicle.example">
+      <IdList>
+        <Id>1</Id>
+        <Id>2</Id>
+      </IdList>
+    </Blacklist>
+    <Blacklist Type="BARRICADE" BypassPermission="garagebypass.barricade.example2">
+      <IdList>
+        <Id>3</Id>
+        <Id>4</Id>
+      </IdList>
+    </Blacklist>
+    <Blacklist Type="ITEM" BypassPermission="garagebypass.item.example2">
+      <IdList>
+        <Id>3</Id>
+        <Id>4</Id>
+      </IdList>
+    </Blacklist>
+    <Blacklist Type="VEHICLE" BypassPermission="garagebypass.vehicle.example2">
+      <IdList>
+        <Id>3</Id>
+        <Id>4</Id>
+      </IdList>
+    </Blacklist>
+  </Blacklists>
+</Configuration>
+```
+
+`<AutoGarageOnLeave>0</AutoGarageOnLeave>`:
+-1 = disabled
+0 = instant
+>0 = seconds until automatic gadd
