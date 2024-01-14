@@ -125,7 +125,7 @@ namespace RFGarage.Commands
 
                 foreach (var drop in region.drops)
                 {
-                    if (!(drop.interactable is InteractableStorage storage))
+                    if (drop.interactable is not InteractableStorage storage)
                         continue;
                     foreach (var asset in from id in blacklist.IdList
                              where storage.items.has(id) != null

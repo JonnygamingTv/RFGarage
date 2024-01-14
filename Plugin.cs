@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using RFGarage.DatabaseManagers;
 using RFGarage.Enums;
 using RFGarage.EventListeners;
+using RFGarage.Models;
 using RFRocketLibrary;
 using RFRocketLibrary.Enum;
 using RFRocketLibrary.Events;
 using RFRocketLibrary.Utils;
+using Rocket.API;
 using Rocket.API.Collections;
 using Rocket.Unturned.Chat;
 using RocketExtensions.Plugins;
+using RocketExtensions.Utilities;
 using SDG.Unturned;
 using UnityEngine;
 using Logger = Rocket.Core.Logging.Logger;
@@ -27,6 +32,7 @@ namespace RFGarage
         internal static Color MsgColor;
         internal Dictionary<ulong, DateTime?> IsProcessingGarage;
         internal HashSet<uint> BusyVehicle;
+        internal Dictionary<Rocket.Unturned.Player.UnturnedPlayer, List<InteractableVehicle>> vehicleQueue = new Dictionary<Rocket.Unturned.Player.UnturnedPlayer, List<InteractableVehicle>>();
 
         protected override void Load()
         {
@@ -57,6 +63,17 @@ namespace RFGarage
                 UnturnedEvent.OnVehicleExploded += VehicleEvent.OnExploded;
                 if (Conf.AutoAddOnDrown)
                     UnturnedPatchEvent.OnPreVehicleDestroyed += VehicleEvent.OnPreVehicleDestroyed;
+                if (Conf.AutoGarageOnLeave != -1)
+                    if (Conf.AutoGarageOnLeave == 0)
+                    {
+                        Rocket.Unturned.U.Events.OnPlayerDisconnected += DisConnA;
+                    }
+                    else
+                    {
+                        Rocket.Unturned.U.Events.OnPlayerDisconnected += DisConnB;
+                        Rocket.Unturned.U.Events.OnPlayerConnected += PConn;
+                    }
+                        
 
                 if (Level.isLoaded)
                     ServerEvent.OnPostLevelLoaded(0);
@@ -79,6 +96,16 @@ namespace RFGarage
                 UnturnedEvent.OnVehicleExploded -= VehicleEvent.OnExploded;
                 if (Conf.AutoAddOnDrown)
                     UnturnedPatchEvent.OnPreVehicleDestroyed -= VehicleEvent.OnPreVehicleDestroyed;
+                if (Conf.AutoGarageOnLeave != -1)
+                    if (Conf.AutoGarageOnLeave == 0)
+                    {
+                        Rocket.Unturned.U.Events.OnPlayerDisconnected -= DisConnA;
+                    }
+                    else
+                    {
+                        Rocket.Unturned.U.Events.OnPlayerDisconnected -= DisConnB;
+                        Rocket.Unturned.U.Events.OnPlayerConnected -= PConn;
+                    }
 
                 Library.DetachEvent(true);
 #if RF
@@ -90,6 +117,113 @@ namespace RFGarage
             Inst = null;
 
             Logger.LogWarning($"[{Name}] Plugin unloaded successfully!");
+        }
+        private void DisConnA(Rocket.Unturned.Player.UnturnedPlayer player) {
+            for(int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
+            {
+                InteractableVehicle vehicle = VehicleManager.vehicles[veh];
+                if(!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner == player.CSteamID && Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
+                {
+                    _ = ToGarage(player, vehicle, vehicle.asset.vehicleName);
+                }
+            }
+        }
+        private void DisConnB(Rocket.Unturned.Player.UnturnedPlayer player)
+        {
+            List<InteractableVehicle> vehicles = new List<InteractableVehicle>();
+            for (int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
+            {
+                InteractableVehicle vehicle = VehicleManager.vehicles[veh];
+                if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner == player.CSteamID && Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
+                {
+                    vehicles.Add(vehicle);
+                }
+            }
+            if (vehicleQueue.ContainsKey(player)) vehicleQueue.Remove(player);
+            vehicleQueue.Add(player, vehicles);
+            StartCoroutine(ToGarageSoon(player));
+        }
+        private void PConn(Rocket.Unturned.Player.UnturnedPlayer player)
+        {
+            vehicleQueue.Remove(player);
+            StopCoroutine(ToGarageSoon(player));
+        }
+        private IEnumerator ToGarageSoon(Rocket.Unturned.Player.UnturnedPlayer player)
+        {
+            yield return new WaitForSeconds(Conf.AutoGarageOnLeave);
+            for (byte i = 0; i < vehicleQueue[player].Count; i++) if (vehicleQueue[player][i] && !vehicleQueue[player][i].isDead) _ = ToGarage(player, vehicleQueue[player][i], vehicleQueue[player][i].asset.vehicleName);
+            vehicleQueue.Remove(player);
+            yield break;
+        }
+        public async System.Threading.Tasks.Task ToGarage(Rocket.Unturned.Player.UnturnedPlayer player, InteractableVehicle vehicle, string vehicleName)
+        {
+            foreach (var blacklist in RFGarage.Plugin.Conf.Blacklists.Where(x => x.Type == EBlacklistType.BARRICADE))
+            {
+                if (player.HasPermission(blacklist.BypassPermission))
+                    continue;
+
+                var region = BarricadeManager.getRegionFromVehicle(vehicle);
+                if (region == null)
+                    continue;
+
+                foreach (var drop in region.drops.Where(drop => blacklist.IdList.Contains(drop.asset.id)))
+                {
+                    return;
+                }
+            }
+
+            foreach (var blacklist in RFGarage.Plugin.Conf.Blacklists.Where(x => x.Type == EBlacklistType.ITEM))
+            {
+                if (player.HasPermission(blacklist.BypassPermission))
+                    continue;
+
+                var region = BarricadeManager.getRegionFromVehicle(vehicle);
+                if (region == null)
+                    continue;
+
+                foreach (var drop in region.drops)
+                {
+                    if (drop.interactable is not InteractableStorage storage)
+                        continue;
+                    foreach (var asset in from id in blacklist.IdList
+                                          where storage.items.has(id) != null
+                                          select AssetUtil.GetItemAsset(id))
+                    {
+                        return;
+                    }
+                }
+            }
+            if (vehicle.trunkItems != null && vehicle.trunkItems.getItemCount() != 0)
+            {
+                foreach (var blacklist in RFGarage.Plugin.Conf.Blacklists.Where(x => x.Type == EBlacklistType.ITEM))
+                {
+                    if (player.HasPermission(blacklist.BypassPermission))
+                        continue;
+
+                    foreach (var asset in from itemJar in vehicle.trunkItems.items
+                                          where blacklist.IdList.Contains(itemJar.item.id)
+                                          select AssetUtil.GetItemAsset(itemJar.item.id))
+                    {
+                        return;
+                    }
+                }
+            }
+            var garageContent = RFRocketLibrary.Models.VehicleWrapper.Create(vehicle);
+            await ThreadTool.RunOnGameThreadAsync(() =>
+            {
+                vehicle.forceRemoveAllPlayers();
+                RFGarage.Utils.VehicleUtil.ClearTrunkAndBarricades(vehicle);
+                VehicleManager.askVehicleDestroy(vehicle);
+            });
+            await DatabaseManager.Queue.Enqueue(async () =>
+                await GarageManager.AddAsync(new PlayerGarage
+                {
+                    SteamId = player.CSteamID.m_SteamID,
+                    VehicleName = vehicleName,
+                    GarageContent = garageContent,
+                    LastUpdated = DateTime.Now,
+                })
+            )!;
         }
 
         public override TranslationList DefaultTranslations => new()
