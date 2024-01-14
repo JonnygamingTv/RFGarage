@@ -64,7 +64,7 @@ namespace RFGarage
                 if (Conf.AutoAddOnDrown)
                     UnturnedPatchEvent.OnPreVehicleDestroyed += VehicleEvent.OnPreVehicleDestroyed;
                 if (Conf.AutoGarageOnLeave != -1)
-                    if (Conf.AutoGarageOnLeave == 0)
+                    if (Conf.AutoGarageOnLeave == 0f)
                     {
                         Rocket.Unturned.U.Events.OnPlayerDisconnected += DisConnA;
                     }
@@ -122,9 +122,11 @@ namespace RFGarage
             for(int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
             {
                 InteractableVehicle vehicle = VehicleManager.vehicles[veh];
-                if(!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner == player.CSteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
+                Logger.Log("Checking: "+veh+" / "+vehicle.asset.vehicleName);
+                if(!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner.m_SteamID == player.CSteamID.m_SteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && !Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
                 {
                     _ = ToGarage(player, vehicle, vehicle.asset.vehicleName);
+                    Logger.Log("Auto: "+vehicle.asset.vehicleName);
                 }
             }
         }
@@ -134,7 +136,7 @@ namespace RFGarage
             for (int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
             {
                 InteractableVehicle vehicle = VehicleManager.vehicles[veh];
-                if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner == player.CSteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
+                if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner == player.CSteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && !Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
                 {
                     vehicles.Add(vehicle);
                 }
