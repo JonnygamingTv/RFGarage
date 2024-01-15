@@ -14,8 +14,10 @@ namespace RFGarage
         public string MessageIconUrl;
         public bool AutoClearDestroyedVehicles;
         public bool AutoAddOnDrown;
+        public bool AutoGarageOnLeave_IgnoreMaxStorage;
         public string AutoAddOnDrownPermission;
         public float AutoGarageOnLeave;
+        public string Permission_Ignore_AutoGarageOnLeave;
         public bool AllowTrain;
         public int DefaultGarageSlot;
         public string GarageSlotPermissionPrefix;
@@ -31,7 +33,9 @@ namespace RFGarage
             AutoClearDestroyedVehicles = true;
             AutoAddOnDrown = true;
             AutoAddOnDrownPermission = "garagedrown";
+            AutoGarageOnLeave_IgnoreMaxStorage = true;
             AutoGarageOnLeave = -1;
+            Permission_Ignore_AutoGarageOnLeave = "noautogarage";
             AllowTrain = false;
             DefaultGarageSlot = 5;
             GarageSlotPermissionPrefix = "garageslot";

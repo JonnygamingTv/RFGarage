@@ -119,6 +119,7 @@ namespace RFGarage
             Logger.LogWarning($"[{Name}] Plugin unloaded successfully!");
         }
         private void DisConnA(Rocket.Unturned.Player.UnturnedPlayer player) {
+            if (player.HasPermission(Conf.Permission_Ignore_AutoGarageOnLeave)) return;
             for(int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
             {
                 InteractableVehicle vehicle = VehicleManager.vehicles[veh];
@@ -130,6 +131,7 @@ namespace RFGarage
         }
         private void DisConnB(Rocket.Unturned.Player.UnturnedPlayer player)
         {
+            if (player.HasPermission(Conf.Permission_Ignore_AutoGarageOnLeave)) return;
             List<InteractableVehicle> vehicles = new List<InteractableVehicle>();
             for (int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
             {
