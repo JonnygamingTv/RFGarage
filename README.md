@@ -63,3 +63,5 @@ A RocketMod / LDM plugin to save/load vehicle to/from a virtual garage
 ) -1 = disabled
 ) 0 = instant
 ) \>0 = seconds until automatic gadd
+
+`<GarageSlotPermissionPrefix>garageslot</GarageSlotPermissionPrefix>`: **garageslot.size**, so if a player has **garageslot.15**, they will be able to store 15 vehicles in their garage.
