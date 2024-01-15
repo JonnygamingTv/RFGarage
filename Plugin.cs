@@ -6,6 +6,7 @@ using RFGarage.DatabaseManagers;
 using RFGarage.Enums;
 using RFGarage.EventListeners;
 using RFGarage.Models;
+using RFGarage.Utils;
 using RFRocketLibrary;
 using RFRocketLibrary.Enum;
 using RFRocketLibrary.Events;
@@ -66,11 +67,24 @@ namespace RFGarage
                 if (Conf.AutoGarageOnLeave != -1)
                     if (Conf.AutoGarageOnLeave == 0f)
                     {
-                        Rocket.Unturned.U.Events.OnPlayerDisconnected += DisConnA;
+                        if (Conf.AutoGarageOnLeave_IgnoreMaxStorage)
+                        {
+                            Rocket.Unturned.U.Events.OnPlayerDisconnected += DisConnA;
+                        }
+                        else {
+                            Rocket.Unturned.U.Events.OnPlayerDisconnected += DisConnC;
+                        }
                     }
                     else
                     {
-                        Rocket.Unturned.U.Events.OnPlayerDisconnected += DisConnB;
+                        if (Conf.AutoGarageOnLeave_IgnoreMaxStorage)
+                        {
+                            Rocket.Unturned.U.Events.OnPlayerDisconnected += DisConnB;
+                        }
+                        else
+                        {
+                            Rocket.Unturned.U.Events.OnPlayerDisconnected += DisConnD;
+                        }
                         Rocket.Unturned.U.Events.OnPlayerConnected += PConn;
                     }
                         
@@ -99,11 +113,24 @@ namespace RFGarage
                 if (Conf.AutoGarageOnLeave != -1)
                     if (Conf.AutoGarageOnLeave == 0)
                     {
-                        Rocket.Unturned.U.Events.OnPlayerDisconnected -= DisConnA;
+                        if (Conf.AutoGarageOnLeave_IgnoreMaxStorage)
+                        {
+                            Rocket.Unturned.U.Events.OnPlayerDisconnected -= DisConnA;
+                        }
+                        else
+                        {
+                            Rocket.Unturned.U.Events.OnPlayerDisconnected -= DisConnC;
+                        }
                     }
                     else
                     {
-                        Rocket.Unturned.U.Events.OnPlayerDisconnected -= DisConnB;
+                        if (Conf.AutoGarageOnLeave_IgnoreMaxStorage)
+                        {
+                            Rocket.Unturned.U.Events.OnPlayerDisconnected -= DisConnB;
+                        }
+                        else {
+                            Rocket.Unturned.U.Events.OnPlayerDisconnected -= DisConnD;
+                        }
                         Rocket.Unturned.U.Events.OnPlayerConnected -= PConn;
                     }
 
@@ -139,6 +166,44 @@ namespace RFGarage
                 if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner.m_SteamID == player.CSteamID.m_SteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && !Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
                 {
                     vehicles.Add(vehicle);
+                }
+            }
+            if (vehicleQueue.ContainsKey(player)) vehicleQueue.Remove(player);
+            vehicleQueue.Add(player, vehicles);
+            StartCoroutine(ToGarageSoon(player));
+        }
+        private void DisConnC(Rocket.Unturned.Player.UnturnedPlayer player)
+        {
+            if (player.HasPermission(Conf.Permission_Ignore_AutoGarageOnLeave)) return;
+            var slot = player.GetGarageSlot();
+            int count = GarageManager.Count(player.CSteamID.m_SteamID);
+            if (count >= slot) return;
+            for (int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
+            {
+                InteractableVehicle vehicle = VehicleManager.vehicles[veh];
+                if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner.m_SteamID == player.CSteamID.m_SteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && !Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
+                {
+                    _ = ToGarage(player, vehicle, vehicle.asset.vehicleName);
+                    count++;
+                    if (count >= slot) break;
+                }
+            }
+        }
+        private void DisConnD(Rocket.Unturned.Player.UnturnedPlayer player)
+        {
+            if (player.HasPermission(Conf.Permission_Ignore_AutoGarageOnLeave)) return;
+            var slot = player.GetGarageSlot();
+            int count = GarageManager.Count(player.CSteamID.m_SteamID);
+            if (count >= slot) return;
+            List<InteractableVehicle> vehicles = new List<InteractableVehicle>();
+            for (int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
+            {
+                InteractableVehicle vehicle = VehicleManager.vehicles[veh];
+                if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner.m_SteamID == player.CSteamID.m_SteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && !Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
+                {
+                    vehicles.Add(vehicle);
+                    count++;
+                    if (count >= slot) break;
                 }
             }
             if (vehicleQueue.ContainsKey(player)) vehicleQueue.Remove(player);
