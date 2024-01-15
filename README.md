@@ -12,7 +12,9 @@ A RocketMod / LDM plugin to save/load vehicle to/from a virtual garage
   <AutoClearDestroyedVehicles>true</AutoClearDestroyedVehicles>
   <AutoAddOnDrown>true</AutoAddOnDrown>
   <AutoAddOnDrownPermission>garagedrown</AutoAddOnDrownPermission>
+  <AutoGarageOnLeave_IgnoreMaxStorage>true</AutoGarageOnLeave_IgnoreMaxStorage>
   <AutoGarageOnLeave>0</AutoGarageOnLeave>
+  <Permission_Ignore_AutoGarageOnLeave>noautogarage</Permission_Ignore_AutoGarageOnLeave>
   <AllowTrain>false</AllowTrain>
   <DefaultGarageSlot>5</DefaultGarageSlot>
   <GarageSlotPermissionPrefix>garageslot</GarageSlotPermissionPrefix>
