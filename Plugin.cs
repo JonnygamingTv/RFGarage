@@ -34,6 +34,7 @@ namespace RFGarage
         internal Dictionary<ulong, DateTime?> IsProcessingGarage;
         internal HashSet<uint> BusyVehicle;
         internal Dictionary<Rocket.Unturned.Player.UnturnedPlayer, List<InteractableVehicle>> vehicleQueue = new Dictionary<Rocket.Unturned.Player.UnturnedPlayer, List<InteractableVehicle>>();
+        internal Dictionary<Rocket.Unturned.Player.UnturnedPlayer,Coroutine> coroutines = new Dictionary<Rocket.Unturned.Player.UnturnedPlayer, Coroutine>();
 
         protected override void Load()
         {
@@ -65,13 +66,15 @@ namespace RFGarage
                 if (Conf.AutoAddOnDrown)
                     UnturnedPatchEvent.OnPreVehicleDestroyed += VehicleEvent.OnPreVehicleDestroyed;
                 if (Conf.AutoGarageOnLeave != -1)
+                {
                     if (Conf.AutoGarageOnLeave == 0f)
                     {
                         if (Conf.AutoGarageOnLeave_IgnoreMaxStorage)
                         {
                             Rocket.Unturned.U.Events.OnPlayerDisconnected += DisConnA;
                         }
-                        else {
+                        else
+                        {
                             Rocket.Unturned.U.Events.OnPlayerDisconnected += DisConnC;
                         }
                     }
@@ -87,7 +90,8 @@ namespace RFGarage
                         }
                         Rocket.Unturned.U.Events.OnPlayerConnected += PConn;
                     }
-                        
+                    coroutines.Clear();
+                } 
 
                 if (Level.isLoaded)
                     ServerEvent.OnPostLevelLoaded(0);
@@ -111,6 +115,7 @@ namespace RFGarage
                 if (Conf.AutoAddOnDrown)
                     UnturnedPatchEvent.OnPreVehicleDestroyed -= VehicleEvent.OnPreVehicleDestroyed;
                 if (Conf.AutoGarageOnLeave != -1)
+                {
                     if (Conf.AutoGarageOnLeave == 0)
                     {
                         if (Conf.AutoGarageOnLeave_IgnoreMaxStorage)
@@ -128,12 +133,14 @@ namespace RFGarage
                         {
                             Rocket.Unturned.U.Events.OnPlayerDisconnected -= DisConnB;
                         }
-                        else {
+                        else
+                        {
                             Rocket.Unturned.U.Events.OnPlayerDisconnected -= DisConnD;
                         }
                         Rocket.Unturned.U.Events.OnPlayerConnected -= PConn;
                     }
-
+                    coroutines.Clear();
+                }
                 Library.DetachEvent(true);
 #if RF
                 Library.Uninitialize();
@@ -170,7 +177,7 @@ namespace RFGarage
             }
             if (vehicleQueue.ContainsKey(player)) vehicleQueue.Remove(player);
             vehicleQueue.Add(player, vehicles);
-            StartCoroutine(ToGarageSoon(player));
+            coroutines.Add(player, StartCoroutine(ToGarageSoon(player)));
         }
         private void DisConnC(Rocket.Unturned.Player.UnturnedPlayer player)
         {
@@ -208,12 +215,17 @@ namespace RFGarage
             }
             if (vehicleQueue.ContainsKey(player)) vehicleQueue.Remove(player);
             vehicleQueue.Add(player, vehicles);
-            StartCoroutine(ToGarageSoon(player));
+            coroutines.Add(player, StartCoroutine(ToGarageSoon(player)));
         }
         private void PConn(Rocket.Unturned.Player.UnturnedPlayer player)
         {
             vehicleQueue.Remove(player);
             StopCoroutine(ToGarageSoon(player));
+            if (coroutines.ContainsKey(player))
+            {
+                StopCoroutine(coroutines[player]);
+                coroutines.Remove(player);
+            }
         }
         private IEnumerator ToGarageSoon(Rocket.Unturned.Player.UnturnedPlayer player)
         {
