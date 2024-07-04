@@ -234,7 +234,7 @@ namespace RFGarage.DatabaseManagers
                             x.SteamId == steamId &&
                             x.VehicleName.Equals(vehicleName, StringComparison.OrdinalIgnoreCase));
                     case EDatabase.LITEDB:
-                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString))
+                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
                         {
                             var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                             var result = await col.Query()
@@ -285,7 +285,7 @@ namespace RFGarage.DatabaseManagers
                     case EDatabase.JSON:
                         return Json_Collection.FindAll(x => x.SteamId == steamId);
                     case EDatabase.LITEDB:
-                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString))
+                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
                         {
                             var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                             return await col.Query().Where(x => x.SteamId == steamId).ToListAsync();
@@ -333,7 +333,7 @@ namespace RFGarage.DatabaseManagers
                     case EDatabase.JSON:
                         return Json_Collection.Count(x => x.SteamId == steamId);
                     case EDatabase.LITEDB:
-                        using (var db = new LiteDB.LiteDatabase(DatabaseManager.LiteDB_ConnectionString))
+                        using (var db = new LiteDB.LiteDatabase(DatabaseManager.LiteDB_ConnectionString,null))
                         {
                             var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                             return col.Count(x => x.SteamId == steamId);
@@ -369,7 +369,7 @@ namespace RFGarage.DatabaseManagers
                         await Json_DataStore.SaveAsync(Json_Collection);
                         break;
                     case EDatabase.LITEDB:
-                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString))
+                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
                         {
                             var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                             await col.DeleteAsync(id);
@@ -452,7 +452,7 @@ namespace RFGarage.DatabaseManagers
                         {
                             case EDatabase.LITEDB:
                                 using (var db =
-                                       new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString))
+                                       new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
                                 {
                                     var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                                     await col.DeleteAllAsync();
@@ -500,7 +500,7 @@ namespace RFGarage.DatabaseManagers
                         {
                             case EDatabase.LITEDB:
                                 using (var db =
-                                       new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString))
+                                       new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
                                 {
                                     var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                                     await col.DeleteAllAsync();

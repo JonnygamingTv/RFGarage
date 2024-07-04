@@ -176,6 +176,7 @@ namespace RFGarage.Commands
                     VehicleName = vehicleName,
                     GarageContent = garageContent,
                     LastUpdated = DateTime.Now,
+                    Color = vehicle.PaintColor
                 })
             )!;
             RFGarage.Plugin.Inst.BusyVehicle.Remove(vehicle.instanceID);
