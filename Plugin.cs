@@ -301,6 +301,7 @@ namespace RFGarage
                     VehicleName = vehicleName,
                     GarageContent = garageContent,
                     LastUpdated = DateTime.Now,
+                    Color = vehicle.PaintColor
                 })
             )!;
         }
