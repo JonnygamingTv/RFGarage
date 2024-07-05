@@ -127,7 +127,7 @@ namespace RFGarage.DatabaseManagers
             try
             {
                 var result = new List<PlayerGarage>();
-                using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
+                using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                 {
                     var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                     var all = await col.FindAllAsync();
@@ -184,7 +184,7 @@ namespace RFGarage.DatabaseManagers
                 switch (Plugin.Conf.Database)
                 {
                     case EDatabase.LITEDB:
-                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
+                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                         {
                             var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                             return await col.InsertAsync(playerGarage);
@@ -234,7 +234,7 @@ namespace RFGarage.DatabaseManagers
                             x.SteamId == steamId &&
                             x.VehicleName.Equals(vehicleName, StringComparison.OrdinalIgnoreCase));
                     case EDatabase.LITEDB:
-                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
+                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                         {
                             var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                             var result = await col.Query()
@@ -285,7 +285,8 @@ namespace RFGarage.DatabaseManagers
                     case EDatabase.JSON:
                         return Json_Collection.FindAll(x => x.SteamId == steamId);
                     case EDatabase.LITEDB:
-                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
+                        // var mapper = new LiteDB.BsonMapper();
+                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                         {
                             var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                             return await col.Query().Where(x => x.SteamId == steamId).ToListAsync();
@@ -369,7 +370,7 @@ namespace RFGarage.DatabaseManagers
                         await Json_DataStore.SaveAsync(Json_Collection);
                         break;
                     case EDatabase.LITEDB:
-                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
+                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                         {
                             var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                             await col.DeleteAsync(id);
@@ -452,7 +453,7 @@ namespace RFGarage.DatabaseManagers
                         {
                             case EDatabase.LITEDB:
                                 using (var db =
-                                       new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
+                                       new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                                 {
                                     var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                                     await col.DeleteAllAsync();
@@ -500,7 +501,7 @@ namespace RFGarage.DatabaseManagers
                         {
                             case EDatabase.LITEDB:
                                 using (var db =
-                                       new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString,null))
+                                       new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                                 {
                                     var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                                     await col.DeleteAllAsync();

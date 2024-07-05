@@ -300,8 +300,7 @@ namespace RFGarage
                     SteamId = player.CSteamID.m_SteamID,
                     VehicleName = vehicleName,
                     GarageContent = garageContent,
-                    LastUpdated = DateTime.Now,
-                    Color = vehicle.PaintColor
+                    LastUpdated = DateTime.Now
                 })
             )!;
         }

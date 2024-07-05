@@ -12,7 +12,6 @@ namespace RFGarage.Models
         public string VehicleName { get; set; } = string.Empty;
         public VehicleWrapper GarageContent { get; set; } = new();
         public DateTime LastUpdated { get; set; } = DateTime.Now;
-        public Color32 Color { get; set; }
 
         public PlayerGarage()
         {

@@ -64,7 +64,6 @@ namespace RFGarage.Commands
                 playerGarage.GarageContent.Position = point;
                 playerGarage.GarageContent.Rotation = QuartenionWrapper.Create(pTransform.rotation);
                 SDG.Unturned.InteractableVehicle veh = playerGarage.GarageContent.SpawnVehicle();
-                veh.ServerSetPaintColor(playerGarage.Color);
                 if (veh.health < 1) veh.health = 1;
             });
             await context.ReplyAsync(
