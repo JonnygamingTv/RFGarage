@@ -49,6 +49,7 @@
     <Compile Include="Commands\GarageRetrieveCommand.cs" />
     <Compile Include="Commands\GaragesCommand.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="DatabaseManagers\CustomBsonMapper.cs" />
     <Compile Include="DatabaseManagers\DatabaseManager.cs" />
     <Compile Include="DatabaseManagers\GarageManager.cs" />
     <Compile Include="Enums\EBlacklistType.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="EventListeners\ServerEvent.cs" />
     <Compile Include="EventListeners\VehicleEvent.cs" />
     <Compile Include="Models\PlayerGarage.cs" />
+    <Compile Include="Models\Size.cs" />
     <Compile Include="PlayerComponent.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Models\Blacklist.cs" />
@@ -90,9 +92,9 @@
     <Reference Include="Newtonsoft.Json.v13.0.2.27524">
       <HintPath>..\..\Newtonsoft.Json.v13.0.2.27524.dll</HintPath>
     </Reference>
-    <Reference Include="RFRocketLibrary.1.0.2, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="RFRocketLibrary, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\RFRocketLibrary.1.0.2.dll</HintPath>
+      <HintPath>..\..\RFRocketLibrary-main\RFRocketLibrary-main\bin\Release\RFRocketLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Rocket.API">
       <HintPath>..\..\..\SteamLibrary\steamapps\common\Unturned\Extras\Rocket.Unturned\Rocket.API.dll</HintPath>
