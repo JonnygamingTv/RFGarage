@@ -53,6 +53,7 @@ namespace RFGarage.Commands
             var count = 0;
             foreach (var playerGarage in playerGarages)
             {
+                if (playerGarage == null) continue;
                 await context.ReplyAsync(
                     VehicleUtil.TranslateRich(EResponse.GARAGE_LIST.ToString(), ++count, playerGarage.VehicleName,
                         playerGarage.GarageContent.Id, playerGarage.GarageContent.GetVehicleAsset().vehicleName),
