@@ -46,8 +46,9 @@ namespace RFGarage.Commands
             var vehicleName = string.Join(" ", context.CommandRawArguments);
             if (byte.TryParse(vehicleName, out byte ind))
             {
+                --ind;
                 var fullGarage = await GarageManager.Get(player.CSteamID.m_SteamID);
-                if(ind < fullGarage.Count) playerGarage = fullGarage[ind-1];
+                if(ind < fullGarage.Count) playerGarage = fullGarage[ind];
             }
             if(playerGarage == null)
             {
