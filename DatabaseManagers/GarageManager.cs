@@ -192,7 +192,7 @@ namespace RFGarage.DatabaseManagers
                     case EDatabase.JSON:
                         playerGarage.Id = Json_NewId();
                         Json_Collection.Add(playerGarage);
-                        await Json_DataStore.SaveAsync(Json_Collection, Newtonsoft.Json.Formatting.None);
+                        await Json_DataStore.SaveAsync(Json_Collection, Plugin.Conf.JsonFormatting);
                         return playerGarage.Id;
                     case EDatabase.MYSQL:
                         using (var connection =
@@ -367,7 +367,7 @@ namespace RFGarage.DatabaseManagers
                 {
                     case EDatabase.JSON:
                         Json_Collection.RemoveAt(Json_Collection.FindIndex(x => x.Id == id));
-                        await Json_DataStore.SaveAsync(Json_Collection, Newtonsoft.Json.Formatting.None);
+                        await Json_DataStore.SaveAsync(Json_Collection, Plugin.Conf.JsonFormatting);
                         break;
                     case EDatabase.LITEDB:
                         using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
@@ -410,7 +410,7 @@ namespace RFGarage.DatabaseManagers
                             case EDatabase.JSON:
                                 Json_DataStore =
                                     new JsonDataStore<List<PlayerGarage>>(Plugin.Inst.Directory, Json_FileName);
-                                await Json_DataStore.SaveAsync(MigrateCollection, Newtonsoft.Json.Formatting.None);
+                                await Json_DataStore.SaveAsync(MigrateCollection, Plugin.Conf.JsonFormatting);
                                 break;
                             case EDatabase.MYSQL:
                                 MySQL_CreateTable(MySql_TableName, MySql_CreateTableQuery);
@@ -512,7 +512,7 @@ namespace RFGarage.DatabaseManagers
                             case EDatabase.JSON:
                                 Json_DataStore =
                                     new JsonDataStore<List<PlayerGarage>>(Plugin.Inst.Directory, Json_FileName);
-                                await Json_DataStore.SaveAsync(MigrateCollection, Newtonsoft.Json.Formatting.None);
+                                await Json_DataStore.SaveAsync(MigrateCollection, Plugin.Conf.JsonFormatting);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException(nameof(to), to, null);
