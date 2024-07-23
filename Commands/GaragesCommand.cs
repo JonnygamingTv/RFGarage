@@ -22,7 +22,7 @@ namespace RFGarage.Commands
     {
         public override async Task Execute(CommandContext context)
         {
-            if (context.CommandRawArguments.Length != 0)
+            if (context.CommandRawArguments != null && context.CommandRawArguments.Length != 0)
             {
                 await context.ReplyAsync(VehicleUtil.TranslateRich(EResponse.INVALID_PARAMETER.ToString(), Syntax),
                     RFGarage.Plugin.MsgColor, RFGarage.Plugin.Conf.MessageIconUrl);
