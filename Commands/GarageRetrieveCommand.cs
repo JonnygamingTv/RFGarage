@@ -42,16 +42,23 @@ namespace RFGarage.Commands
             }
 
             RFGarage.Plugin.Inst.IsProcessingGarage[player.CSteamID.m_SteamID] = null;
-
+            Models.PlayerGarage playerGarage = null;
             var vehicleName = string.Join(" ", context.CommandRawArguments);
-            var playerGarage = await GarageManager.Get(player.CSteamID.m_SteamID, vehicleName);
-            if (playerGarage == null)
+            if (byte.TryParse(vehicleName, out byte ind))
             {
-                await context.ReplyAsync(VehicleUtil.TranslateRich(EResponse.VEHICLE_NOT_FOUND.ToString(), vehicleName),
-                    RFGarage.Plugin.MsgColor, RFGarage.Plugin.Conf.MessageIconUrl);
-                return;
+                var fullGarage = await GarageManager.Get(player.CSteamID.m_SteamID);
+                if(ind < fullGarage.Count) playerGarage = fullGarage[ind-1];
             }
-
+            if(playerGarage == null)
+            {
+                playerGarage = await GarageManager.Get(player.CSteamID.m_SteamID, vehicleName);
+                if (playerGarage == null)
+                {
+                    await context.ReplyAsync(VehicleUtil.TranslateRich(EResponse.VEHICLE_NOT_FOUND.ToString(), vehicleName),
+                        RFGarage.Plugin.MsgColor, RFGarage.Plugin.Conf.MessageIconUrl);
+                    return;
+                }
+            }
             RFGarage.Plugin.Inst.IsProcessingGarage[player.CSteamID.m_SteamID] = DateTime.Now;
             await DatabaseManager.Queue.Enqueue(async () => await GarageManager.DeleteAsync(playerGarage.Id))!;
 
