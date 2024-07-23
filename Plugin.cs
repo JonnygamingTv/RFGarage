@@ -45,11 +45,18 @@ namespace RFGarage
             {
                 MsgColor = UnturnedChat.GetColorFromName(Conf.MessageColor, Color.green);
 
-                DependencyUtil.Load(EDependency.NewtonsoftJson);
-                DependencyUtil.Load(EDependency.LiteDB);
-                DependencyUtil.Load(EDependency.LiteDBAsync);
-                DependencyUtil.Load(EDependency.Dapper);
-                DependencyUtil.Load(EDependency.MySqlData);
+                try
+                {
+                    DependencyUtil.Load(EDependency.NewtonsoftJson);
+                    DependencyUtil.Load(EDependency.LiteDB);
+                    DependencyUtil.Load(EDependency.LiteDBAsync);
+                    DependencyUtil.Load(EDependency.Dapper);
+                    DependencyUtil.Load(EDependency.MySqlData);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogException(e);
+                }
 
                 DatabaseManager.Initialize();
                 GarageManager.Initialize();
