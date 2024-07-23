@@ -232,7 +232,7 @@ namespace RFGarage.DatabaseManagers
                     case EDatabase.JSON:
                         return Json_Collection.Find(x =>
                             x.SteamId == steamId &&
-                            x.VehicleName.Equals(vehicleName, StringComparison.OrdinalIgnoreCase));
+                            x.VehicleName.ToLower().Contains(vehicleName));
                     case EDatabase.LITEDB:
                         using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                         {
