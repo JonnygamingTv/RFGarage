@@ -48,7 +48,8 @@ namespace RFGarage.Commands
             {
                 --ind;
                 var fullGarage = await GarageManager.Get(player.CSteamID.m_SteamID);
-                if(ind < fullGarage.Count) playerGarage = fullGarage[ind];
+                if (ind < fullGarage.Count) playerGarage = fullGarage[ind];
+                else playerGarage = fullGarage.Find(x =>x.VehicleName.ToLower().Contains(vehicleName));
             }
             if(playerGarage == null)
             {

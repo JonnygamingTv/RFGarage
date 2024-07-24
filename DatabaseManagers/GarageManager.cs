@@ -78,12 +78,13 @@ namespace RFGarage.DatabaseManagers
                 }
 
                 Json_Collection = Json_DataStore.Load() ?? new List<PlayerGarage>();
-                Json_DataStore.Save(Json_Collection);
+                // Json_DataStore.Save(Json_Collection);
             }
             catch (Exception e)
             {
                 Logger.LogError($"[{Plugin.Inst.Name}] [ERROR] GarageManager JSON_Reload: {e.Message}");
                 Logger.LogError($"[{Plugin.Inst.Name}] [ERROR] Details: {e}");
+                Rocket.Unturned.Chat.UnturnedChat.Say("There was an error loading garage from JSON, your garage data will be reset if you proceed.");
             }
         }
 
