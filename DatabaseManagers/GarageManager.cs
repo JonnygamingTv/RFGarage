@@ -78,7 +78,7 @@ namespace RFGarage.DatabaseManagers
                 }
 
                 Json_Collection = Json_DataStore.Load() ?? new List<PlayerGarage>();
-                // Json_DataStore.Save(Json_Collection);
+                if(!Plugin.Conf.SafeDb) Json_DataStore.Save(Json_Collection, Newtonsoft.Json.Formatting.None);
             }
             catch (Exception e)
             {

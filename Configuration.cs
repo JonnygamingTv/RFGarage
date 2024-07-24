@@ -7,6 +7,7 @@ namespace RFGarage
 {
     public class Configuration : IRocketPluginConfiguration
     {
+        public bool SafeDb;
         public bool Enabled;
         public EDatabase Database;
         public Newtonsoft.Json.Formatting JsonFormatting;
@@ -26,6 +27,7 @@ namespace RFGarage
         
         public void LoadDefaults()
         {
+            SafeDb = false;
             Enabled = true;
             Database = EDatabase.LITEDB;
             JsonFormatting = Newtonsoft.Json.Formatting.Indented;
