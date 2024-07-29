@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using RFGarage.DatabaseManagers;
 using RFGarage.Enums;
@@ -90,6 +91,11 @@ namespace RFGarage
                             Rocket.Unturned.U.Events.OnPlayerDisconnected += DisConnD;
                         }
                         Rocket.Unturned.U.Events.OnPlayerConnected += PConn;
+                        if(vehicleQueue.Count==0)try
+                        {
+                            LoadAutoGadd();
+                        }
+                        catch (Exception) { }
                     }
                     coroutines.Clear();
                 } 
@@ -139,6 +145,11 @@ namespace RFGarage
                             Rocket.Unturned.U.Events.OnPlayerDisconnected -= DisConnD;
                         }
                         Rocket.Unturned.U.Events.OnPlayerConnected -= PConn;
+                        try
+                        {
+                            SaveAutoGadd();
+                        }
+                        catch (Exception) { }
                     }
                     coroutines.Clear();
                 }
@@ -304,6 +315,65 @@ namespace RFGarage
                     LastUpdated = DateTime.Now
                 })
             )!;
+        }
+
+        void LoadAutoGadd()
+        {
+            string filePath = Path.Combine(Directory, "AutoGadd.log");
+
+            if (!File.Exists(filePath))
+            {
+                return;
+            }
+            string[] lines = File.ReadAllLines(filePath);
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split('|');
+                if (parts.Length == 2)
+                {
+                    Rocket.Unturned.Player.UnturnedPlayer key = Rocket.Unturned.Player.UnturnedPlayer.FromCSteamID(new Steamworks.CSteamID(ulong.Parse(parts[0])));
+                    if (DateTime.TryParse(parts[1], null, System.Globalization.DateTimeStyles.RoundtripKind, out DateTime value))
+                    {
+                        List<InteractableVehicle> vehs = new List<InteractableVehicle>();
+                        for(int y = 2; y < parts.Length; y++)
+                        {
+                            InteractableVehicle veh = VehicleManager.findVehicleByNetInstanceID(uint.Parse(parts[y]));
+                            if(veh != null) vehs.Add(veh);
+                        }
+                        if (vehs.Count != 0)
+                        {
+                            vehicleQueue[key] = vehs;
+                            coroutines[key] = StartCoroutine(ToGarageSoon(key));
+                        }
+                    }
+                    else
+                    {
+                        throw new FormatException($"The date format in the file is invalid: {parts[1]}");
+                    }
+                }
+                else
+                {
+                    throw new FormatException($"The line format is invalid: {line}");
+                }
+            }
+        }
+
+        void SaveAutoGadd()
+        {
+            List<string> lines = new List<string>();
+
+            foreach (var kvp in vehicleQueue)
+            {
+                if (kvp.Value.Count == 0) continue;
+                string line = $"{kvp.Key.CSteamID.ToString()}|{DateTime.Now}";
+                foreach (var veh in kvp.Value)
+                {
+                    line += "|"+veh.instanceID.ToString();
+                }
+                lines.Add(line);
+            }
+
+            File.WriteAllLines(Path.Combine(Directory, "AutoGadd.log"), lines);
         }
 
         public override TranslationList DefaultTranslations => new()
