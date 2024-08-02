@@ -164,70 +164,78 @@ namespace RFGarage
 
             Logger.LogWarning($"[{Name}] Plugin unloaded successfully!");
         }
-        private void DisConnA(Rocket.Unturned.Player.UnturnedPlayer player) {
+        private async void DisConnA(Rocket.Unturned.Player.UnturnedPlayer player) {
             if (player.HasPermission(Conf.Permission_Ignore_AutoGarageOnLeave)) return;
             for(int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
             {
                 InteractableVehicle vehicle = VehicleManager.vehicles[veh];
                 if(!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner.m_SteamID == player.CSteamID.m_SteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && !Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
                 {
-                    _ = ToGarage(player, vehicle, vehicle.asset.vehicleName);
+                    await ToGarage(player, vehicle, vehicle.asset.vehicleName);
                 }
             }
         }
-        private void DisConnB(Rocket.Unturned.Player.UnturnedPlayer player)
+        private async void DisConnB(Rocket.Unturned.Player.UnturnedPlayer player)
         {
             if (player.HasPermission(Conf.Permission_Ignore_AutoGarageOnLeave)) return;
-            List<InteractableVehicle> vehicles = new List<InteractableVehicle>();
-            for (int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
+            await System.Threading.Tasks.Task.Run(() =>
             {
-                InteractableVehicle vehicle = VehicleManager.vehicles[veh];
-                if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner.m_SteamID == player.CSteamID.m_SteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && !Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
+                List<InteractableVehicle> vehicles = new List<InteractableVehicle>();
+                for (int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
                 {
-                    vehicles.Add(vehicle);
+                    InteractableVehicle vehicle = VehicleManager.vehicles[veh];
+                    if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner.m_SteamID == player.CSteamID.m_SteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && !Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
+                    {
+                        vehicles.Add(vehicle);
+                    }
                 }
-            }
-            if (vehicleQueue.ContainsKey(player)) vehicleQueue.Remove(player);
-            vehicleQueue.Add(player, vehicles);
-            coroutines.Add(player, StartCoroutine(ToGarageSoon(player)));
+                if (vehicleQueue.ContainsKey(player)) vehicleQueue.Remove(player);
+                vehicleQueue.Add(player, vehicles);
+                coroutines.Add(player, StartCoroutine(ToGarageSoon(player)));
+                SaveAutoGadd();
+            });
         }
-        private void DisConnC(Rocket.Unturned.Player.UnturnedPlayer player)
-        {
-            if (player.HasPermission(Conf.Permission_Ignore_AutoGarageOnLeave)) return;
-            var slot = player.GetGarageSlot();
-            int count = GarageManager.Count(player.CSteamID.m_SteamID);
-            if (count >= slot) return;
-            for (int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
-            {
-                InteractableVehicle vehicle = VehicleManager.vehicles[veh];
-                if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner.m_SteamID == player.CSteamID.m_SteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && !Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
-                {
-                    _ = ToGarage(player, vehicle, vehicle.asset.vehicleName);
-                    count++;
-                    if (count >= slot) break;
-                }
-            }
-        }
-        private void DisConnD(Rocket.Unturned.Player.UnturnedPlayer player)
+        private async void DisConnC(Rocket.Unturned.Player.UnturnedPlayer player)
         {
             if (player.HasPermission(Conf.Permission_Ignore_AutoGarageOnLeave)) return;
             var slot = player.GetGarageSlot();
             int count = GarageManager.Count(player.CSteamID.m_SteamID);
             if (count >= slot) return;
-            List<InteractableVehicle> vehicles = new List<InteractableVehicle>();
             for (int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
             {
                 InteractableVehicle vehicle = VehicleManager.vehicles[veh];
                 if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner.m_SteamID == player.CSteamID.m_SteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && !Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
                 {
-                    vehicles.Add(vehicle);
+                    await ToGarage(player, vehicle, vehicle.asset.vehicleName);
                     count++;
                     if (count >= slot) break;
                 }
             }
-            if (vehicleQueue.ContainsKey(player)) vehicleQueue.Remove(player);
-            vehicleQueue.Add(player, vehicles);
-            coroutines.Add(player, StartCoroutine(ToGarageSoon(player)));
+        }
+        private async void DisConnD(Rocket.Unturned.Player.UnturnedPlayer player)
+        {
+            if (player.HasPermission(Conf.Permission_Ignore_AutoGarageOnLeave)) return;
+            await System.Threading.Tasks.Task.Run(() =>
+            {
+                var slot = player.GetGarageSlot();
+                int count = GarageManager.Count(player.CSteamID.m_SteamID);
+                if (count >= slot) return;
+                List<InteractableVehicle> vehicles = new List<InteractableVehicle>();
+                for (int veh = 0; veh < VehicleManager.vehicles.Count; veh++)
+                {
+                    InteractableVehicle vehicle = VehicleManager.vehicles[veh];
+                    if (!vehicle.isDead && !vehicle.isExploded && vehicle.isLocked && vehicle.lockedOwner.m_SteamID == player.CSteamID.m_SteamID && (RFGarage.Plugin.Conf.AllowTrain || vehicle.asset.engine != EEngine.TRAIN) && !Conf.Blacklists.Any(x => x.Type == EBlacklistType.VEHICLE && !player.HasPermission(x.BypassPermission) && x.IdList.Contains(vehicle.id)))
+                    {
+                        vehicles.Add(vehicle);
+                        count++;
+                        if (count >= slot) break;
+                    }
+                }
+                if (vehicleQueue.ContainsKey(player)) vehicleQueue.Remove(player);
+                vehicleQueue.Add(player, vehicles);
+                coroutines.Add(player, StartCoroutine(ToGarageSoon(player)));
+                SaveAutoGadd();
+            });
         }
         private void PConn(Rocket.Unturned.Player.UnturnedPlayer player)
         {
