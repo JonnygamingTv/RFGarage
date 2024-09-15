@@ -17,7 +17,7 @@ namespace RFGarage.Commands
 #if RELEASEPUNCH
     [CommandAliases("vs")]
 #else
-    [CommandAliases("gretrieve", "gret", "gr", "garageget","gget")]
+    [CommandAliases("gretrieve","garageretrieve", "gret", "gr", "garageget","gget","gtake","garagetake")]
 #endif
     [CommandInfo("Retrieve vehicle from garage.", "/garageretrieve <vehicleName>", AllowSimultaneousCalls = false)]
     public class GarageRetrieveCommand : RocketCommand
