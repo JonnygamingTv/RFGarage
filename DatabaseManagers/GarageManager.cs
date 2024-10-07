@@ -41,16 +41,22 @@ namespace RFGarage.DatabaseManagers
                 switch (Plugin.Conf.Database)
                 {
                     case EDatabase.LITEDB:
-                        LiteDB_Init();
-                        break;
+                        {
+                            LiteDB_Init();
+                            break;
+                        }
                     case EDatabase.JSON:
-                        Json_DataStore = new JsonDataStore<List<PlayerGarage>>(Plugin.Inst.Directory, Json_FileName);
-                        JSON_Reload();
-                        break;
+                        {
+                            Json_DataStore = new JsonDataStore<List<PlayerGarage>>(Plugin.Inst.Directory, Json_FileName);
+                            JSON_Reload();
+                            break;
+                        }
                     case EDatabase.MYSQL:
-                        // new CP1250();
-                        MySQL_CreateTable(MySql_TableName, MySql_CreateTableQuery);
-                        break;
+                        {
+                            // new CP1250();
+                            MySQL_CreateTable(MySql_TableName, MySql_CreateTableQuery);
+                            break;
+                        }
                 }
 
                 Ready = true;
@@ -185,33 +191,39 @@ namespace RFGarage.DatabaseManagers
                 switch (Plugin.Conf.Database)
                 {
                     case EDatabase.LITEDB:
-                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                         {
-                            var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                            return await col.InsertAsync(playerGarage);
+                            using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
+                            {
+                                var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
+                                return await col.InsertAsync(playerGarage);
+                            }
                         }
                     case EDatabase.JSON:
-                        playerGarage.Id = Json_NewId();
-                        Json_Collection.Add(playerGarage);
-                        await Json_DataStore.SaveAsync(Json_Collection, Plugin.Conf.JsonFormatting);
-                        return playerGarage.Id;
-                    case EDatabase.MYSQL:
-                        using (var connection =
-                               new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
                         {
-                            var serialized = playerGarage.GarageContent.Serialize();
-                            var garageContent = serialized.ToBase64();
-                            var insertQuery =
-                                $"INSERT INTO `{MySql_TableName}` (`SteamId`, `VehicleName`, `GarageContent`) " +
-                                "VALUES(@SteamId, @VehicleName, @GarageContent); SELECT last_insert_id();";
-                            var parameter = new Dapper.DynamicParameters();
-                            parameter.Add("@SteamId", playerGarage.SteamId, DbType.String, ParameterDirection.Input);
-                            parameter.Add("@VehicleName", playerGarage.VehicleName, DbType.String,
-                                ParameterDirection.Input);
-                            parameter.Add("@GarageContent", garageContent, DbType.String, ParameterDirection.Input);
-                            var lastId =
-                                await Dapper.SqlMapper.ExecuteScalarAsync<int>(connection, insertQuery, parameter);
-                            return lastId;
+                            playerGarage.Id = Json_NewId();
+                            Json_Collection.Add(playerGarage);
+                            await Json_DataStore.SaveAsync(Json_Collection, Plugin.Conf.JsonFormatting);
+                            return playerGarage.Id;
+                        }
+                    case EDatabase.MYSQL:
+                        {
+                            using (var connection =
+                                   new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
+                            {
+                                var serialized = playerGarage.GarageContent.Serialize();
+                                var garageContent = serialized.ToBase64();
+                                var insertQuery =
+                                    $"INSERT INTO `{MySql_TableName}` (`SteamId`, `VehicleName`, `GarageContent`) " +
+                                    "VALUES(@SteamId, @VehicleName, @GarageContent); SELECT last_insert_id();";
+                                var parameter = new Dapper.DynamicParameters();
+                                parameter.Add("@SteamId", playerGarage.SteamId, DbType.String, ParameterDirection.Input);
+                                parameter.Add("@VehicleName", playerGarage.VehicleName, DbType.String,
+                                    ParameterDirection.Input);
+                                parameter.Add("@GarageContent", garageContent, DbType.String, ParameterDirection.Input);
+                                var lastId =
+                                    await Dapper.SqlMapper.ExecuteScalarAsync<int>(connection, insertQuery, parameter);
+                                return lastId;
+                            }
                         }
                 }
             }
@@ -231,39 +243,45 @@ namespace RFGarage.DatabaseManagers
                 switch (Plugin.Conf.Database)
                 {
                     case EDatabase.JSON:
-                        return Json_Collection.Find(x =>
-                            x.SteamId == steamId &&
-                            x.VehicleName.ToLower().Contains(vehicleName));
-                    case EDatabase.LITEDB:
-                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                         {
-                            var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                            var result = await col.Query()
-                                .Where(x => x.SteamId == steamId).ToListAsync();
-                            return result?.FirstOrDefault(x =>
-                                x.VehicleName.ToLower().Contains(vehicleName.ToLower()));
+                            return Json_Collection.Find(x =>
+                                x.SteamId == steamId &&
+                                x.VehicleName.ToLower().Contains(vehicleName));
+                        }
+                    case EDatabase.LITEDB:
+                        {
+                            using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
+                            {
+                                var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
+                                var result = await col.Query()
+                                    .Where(x => x.SteamId == steamId).ToListAsync();
+                                return result?.FirstOrDefault(x =>
+                                    x.VehicleName.ToLower().Contains(vehicleName.ToLower()));
+                            }
                         }
                     case EDatabase.MYSQL:
-                        using (var connection =
-                               new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
                         {
-                            var query =
-                                $"SELECT * FROM `{MySql_TableName}` WHERE `SteamId` = @SteamId AND LOCATE('{vehicleName}', `VehicleName`) > 0;";
-                            var objects = await Dapper.SqlMapper.QueryAsync(connection, query, new {SteamId = steamId});
-                            var first = objects?.Cast<IDictionary<string, object>>().FirstOrDefault();
-                            if (first == null)
-                                return null;
-                            
-                            var byteArray = first["GarageContent"].ToString().ToByteArray();
-                            var garageContent = byteArray.Deserialize<VehicleWrapper>();
-                            return new PlayerGarage
+                            using (var connection =
+                                   new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
                             {
-                                Id = Convert.ToInt32(first["Id"]),
-                                SteamId = Convert.ToUInt64(first["SteamId"]),
-                                VehicleName = first["VehicleName"].ToString(),
-                                GarageContent = garageContent,
-                                LastUpdated = Convert.ToDateTime(first["LastUpdated"]),
-                            };
+                                var query =
+                                    $"SELECT * FROM `{MySql_TableName}` WHERE `SteamId` = @SteamId AND LOCATE('{vehicleName}', `VehicleName`) > 0;";
+                                var objects = await Dapper.SqlMapper.QueryAsync(connection, query, new { SteamId = steamId });
+                                var first = objects?.Cast<IDictionary<string, object>>().FirstOrDefault();
+                                if (first == null)
+                                    return null;
+
+                                var byteArray = first["GarageContent"].ToString().ToByteArray();
+                                var garageContent = byteArray.Deserialize<VehicleWrapper>();
+                                return new PlayerGarage
+                                {
+                                    Id = Convert.ToInt32(first["Id"]),
+                                    SteamId = Convert.ToUInt64(first["SteamId"]),
+                                    VehicleName = first["VehicleName"].ToString(),
+                                    GarageContent = garageContent,
+                                    LastUpdated = Convert.ToDateTime(first["LastUpdated"]),
+                                };
+                            }
                         }
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -284,35 +302,41 @@ namespace RFGarage.DatabaseManagers
                 switch (Plugin.Conf.Database)
                 {
                     case EDatabase.JSON:
-                        return Json_Collection.FindAll(x => x.SteamId == steamId);
-                    case EDatabase.LITEDB:
-                        // var mapper = new LiteDB.BsonMapper();
-                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                         {
-                            var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                            return await col.Query().Where(x => x.SteamId == steamId).ToListAsync();
+                            return Json_Collection.FindAll(x => x.SteamId == steamId);
+                        }
+                    case EDatabase.LITEDB:
+                        {
+                            // var mapper = new LiteDB.BsonMapper();
+                            using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
+                            {
+                                var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
+                                return await col.Query().Where(x => x.SteamId == steamId).ToListAsync();
+                            }
                         }
                     case EDatabase.MYSQL:
-                        using (var connection =
-                               new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
                         {
-                            var query =
-                                $"SELECT * FROM `{MySql_TableName}` WHERE `SteamId` = @SteamId;";
-                            var objects = await Dapper.SqlMapper.QueryAsync(connection, query, new {SteamId = steamId});
-                            if (objects == null)
-                                return null;
-                            
-                            return (from database in objects.Cast<IDictionary<string, object>>()
-                                let byteArray = database["GarageContent"].ToString().ToByteArray()
-                                let garageContent = byteArray.Deserialize<VehicleWrapper>()
-                                select new PlayerGarage
-                                {
-                                    Id = Convert.ToInt32(database["Id"]),
-                                    SteamId = Convert.ToUInt64(database["SteamId"]),
-                                    VehicleName = database["VehicleName"].ToString(),
-                                    GarageContent = garageContent,
-                                    LastUpdated = Convert.ToDateTime(database["LastUpdated"]),
-                                }).ToList();
+                            using (var connection =
+                                   new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
+                            {
+                                var query =
+                                    $"SELECT * FROM `{MySql_TableName}` WHERE `SteamId` = @SteamId;";
+                                var objects = await Dapper.SqlMapper.QueryAsync(connection, query, new { SteamId = steamId });
+                                if (objects == null)
+                                    return null;
+
+                                return (from database in objects.Cast<IDictionary<string, object>>()
+                                        let byteArray = database["GarageContent"].ToString().ToByteArray()
+                                        let garageContent = byteArray.Deserialize<VehicleWrapper>()
+                                        select new PlayerGarage
+                                        {
+                                            Id = Convert.ToInt32(database["Id"]),
+                                            SteamId = Convert.ToUInt64(database["SteamId"]),
+                                            VehicleName = database["VehicleName"].ToString(),
+                                            GarageContent = garageContent,
+                                            LastUpdated = Convert.ToDateTime(database["LastUpdated"]),
+                                        }).ToList();
+                            }
                         }
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -333,20 +357,26 @@ namespace RFGarage.DatabaseManagers
                 switch (Plugin.Conf.Database)
                 {
                     case EDatabase.JSON:
-                        return Json_Collection.Count(x => x.SteamId == steamId);
-                    case EDatabase.LITEDB:
-                        using (var db = new LiteDB.LiteDatabase(DatabaseManager.LiteDB_ConnectionString,null))
                         {
-                            var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                            return col.Count(x => x.SteamId == steamId);
+                            return Json_Collection.Count(x => x.SteamId == steamId);
+                        }
+                    case EDatabase.LITEDB:
+                        {
+                            using (var db = new LiteDB.LiteDatabase(DatabaseManager.LiteDB_ConnectionString, null))
+                            {
+                                var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
+                                return col.Count(x => x.SteamId == steamId);
+                            }
                         }
                     case EDatabase.MYSQL:
-                        using (var connection =
-                               new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
                         {
-                            var query =
-                                $"SELECT COUNT(`Id`) FROM `{MySql_TableName}` WHERE `SteamId` = @SteamId;";
-                            return Dapper.SqlMapper.ExecuteScalar<int>(connection, query, new {SteamId = steamId});
+                            using (var connection =
+                                   new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
+                            {
+                                var query =
+                                    $"SELECT COUNT(`Id`) FROM `{MySql_TableName}` WHERE `SteamId` = @SteamId;";
+                                return Dapper.SqlMapper.ExecuteScalar<int>(connection, query, new { SteamId = steamId });
+                            }
                         }
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -367,26 +397,32 @@ namespace RFGarage.DatabaseManagers
                 switch (Plugin.Conf.Database)
                 {
                     case EDatabase.JSON:
-                        Json_Collection.RemoveAt(Json_Collection.FindIndex(x => x.Id == id));
-                        await Json_DataStore.SaveAsync(Json_Collection, Plugin.Conf.JsonFormatting);
-                        break;
+                        {
+                            Json_Collection.RemoveAt(Json_Collection.FindIndex(x => x.Id == id));
+                            await Json_DataStore.SaveAsync(Json_Collection, Plugin.Conf.JsonFormatting);
+                            break;
+                        }
                     case EDatabase.LITEDB:
-                        using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                         {
-                            var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                            await col.DeleteAsync(id);
-                        }
+                            using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
+                            {
+                                var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
+                                await col.DeleteAsync(id);
+                            }
 
-                        break;
+                            break;
+                        }
                     case EDatabase.MYSQL:
-                        using (var connection =
-                               new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
                         {
-                            await Dapper.SqlMapper.ExecuteAsync(connection,
-                                $"DELETE FROM `{MySql_TableName}` WHERE `Id` = @Id;", new {Id = id});
-                        }
+                            using (var connection =
+                                   new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
+                            {
+                                await Dapper.SqlMapper.ExecuteAsync(connection,
+                                    $"DELETE FROM `{MySql_TableName}` WHERE `Id` = @Id;", new { Id = id });
+                            }
 
-                        break;
+                            break;
+                        }
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -409,39 +445,43 @@ namespace RFGarage.DatabaseManagers
                         switch (to)
                         {
                             case EDatabase.JSON:
-                                Json_DataStore =
-                                    new JsonDataStore<List<PlayerGarage>>(Plugin.Inst.Directory, Json_FileName);
-                                await Json_DataStore.SaveAsync(MigrateCollection, Plugin.Conf.JsonFormatting);
-                                break;
-                            case EDatabase.MYSQL:
-                                MySQL_CreateTable(MySql_TableName, MySql_CreateTableQuery);
-                                using (var connection =
-                                       new MySql.Data.MySqlClient.MySqlConnection(
-                                           DatabaseManager.MySql_ConnectionString))
                                 {
-                                    var deleteQuery = $"DELETE FROM `{MySql_TableName}`;";
-                                    await Dapper.SqlMapper.ExecuteAsync(connection, deleteQuery);
-
-                                    foreach (var playerGarage in MigrateCollection)
-                                    {
-                                        var serialized = playerGarage.GarageContent.Serialize();
-                                        var garageContent = serialized.ToBase64();
-                                        var parameter = new Dapper.DynamicParameters();
-                                        parameter.Add("@Id", playerGarage.Id, DbType.Int32, ParameterDirection.Input);
-                                        parameter.Add("@SteamId", playerGarage.SteamId, DbType.String,
-                                            ParameterDirection.Input);
-                                        parameter.Add("@VehicleName", playerGarage.VehicleName, DbType.String,
-                                            ParameterDirection.Input);
-                                        parameter.Add("@GarageContent", garageContent ?? string.Empty, DbType.String,
-                                            ParameterDirection.Input);
-                                        var insertQuery =
-                                            $"INSERT INTO `{MySql_TableName}` (`Id`, `SteamId`, `VehicleName`, `GarageContent`) " +
-                                            "VALUES (@Id, @SteamId, @VehicleName, @GarageContent);";
-                                        await Dapper.SqlMapper.ExecuteAsync(connection, insertQuery, parameter);
-                                    }
+                                    Json_DataStore =
+                                        new JsonDataStore<List<PlayerGarage>>(Plugin.Inst.Directory, Json_FileName);
+                                    await Json_DataStore.SaveAsync(MigrateCollection, Plugin.Conf.JsonFormatting);
+                                    break;
                                 }
+                            case EDatabase.MYSQL:
+                                {
+                                    MySQL_CreateTable(MySql_TableName, MySql_CreateTableQuery);
+                                    using (var connection =
+                                           new MySql.Data.MySqlClient.MySqlConnection(
+                                               DatabaseManager.MySql_ConnectionString))
+                                    {
+                                        var deleteQuery = $"DELETE FROM `{MySql_TableName}`;";
+                                        await Dapper.SqlMapper.ExecuteAsync(connection, deleteQuery);
 
-                                break;
+                                        foreach (var playerGarage in MigrateCollection)
+                                        {
+                                            var serialized = playerGarage.GarageContent.Serialize();
+                                            var garageContent = serialized.ToBase64();
+                                            var parameter = new Dapper.DynamicParameters();
+                                            parameter.Add("@Id", playerGarage.Id, DbType.Int32, ParameterDirection.Input);
+                                            parameter.Add("@SteamId", playerGarage.SteamId, DbType.String,
+                                                ParameterDirection.Input);
+                                            parameter.Add("@VehicleName", playerGarage.VehicleName, DbType.String,
+                                                ParameterDirection.Input);
+                                            parameter.Add("@GarageContent", garageContent ?? string.Empty, DbType.String,
+                                                ParameterDirection.Input);
+                                            var insertQuery =
+                                                $"INSERT INTO `{MySql_TableName}` (`Id`, `SteamId`, `VehicleName`, `GarageContent`) " +
+                                                "VALUES (@Id, @SteamId, @VehicleName, @GarageContent);";
+                                            await Dapper.SqlMapper.ExecuteAsync(connection, insertQuery, parameter);
+                                        }
+                                    }
+
+                                    break;
+                                }
                             default:
                                 throw new ArgumentOutOfRangeException(nameof(to), to, null);
                         }
@@ -453,44 +493,48 @@ namespace RFGarage.DatabaseManagers
                         switch (to)
                         {
                             case EDatabase.LITEDB:
-                                using (var db =
-                                       new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                                 {
-                                    var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                                    await col.DeleteAllAsync();
-                                    await col.InsertBulkAsync(MigrateCollection);
-                                }
-
-                                break;
-                            case EDatabase.MYSQL:
-                                MySQL_CreateTable(MySql_TableName, MySql_CreateTableQuery);
-                                using (var connection =
-                                       new MySql.Data.MySqlClient.MySqlConnection(
-                                           DatabaseManager.MySql_ConnectionString))
-                                {
-                                    var deleteQuery = $"DELETE FROM `{MySql_TableName}`;";
-                                    await Dapper.SqlMapper.ExecuteAsync(connection, deleteQuery);
-
-                                    foreach (var playerGarage in MigrateCollection)
+                                    using (var db =
+                                           new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                                     {
-                                        var serialized = playerGarage.GarageContent.Serialize();
-                                        var garageContent = serialized.ToBase64();
-                                        var parameter = new Dapper.DynamicParameters();
-                                        parameter.Add("@Id", playerGarage.Id, DbType.Int32, ParameterDirection.Input);
-                                        parameter.Add("@SteamId", playerGarage.SteamId, DbType.String,
-                                            ParameterDirection.Input);
-                                        parameter.Add("@VehicleName", playerGarage.VehicleName, DbType.String,
-                                            ParameterDirection.Input);
-                                        parameter.Add("@GarageContent", garageContent ?? string.Empty, DbType.String,
-                                            ParameterDirection.Input);
-                                        var insertQuery =
-                                            $"INSERT INTO `{MySql_TableName}` (`Id`, `SteamId`, `VehicleName`, `GarageContent`) " +
-                                            "VALUES (@Id, @SteamId, @VehicleName, @GarageContent);";
-                                        await Dapper.SqlMapper.ExecuteAsync(connection, insertQuery, parameter);
+                                        var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
+                                        await col.DeleteAllAsync();
+                                        await col.InsertBulkAsync(MigrateCollection);
                                     }
-                                }
 
-                                break;
+                                    break;
+                                }
+                            case EDatabase.MYSQL:
+                                {
+                                    MySQL_CreateTable(MySql_TableName, MySql_CreateTableQuery);
+                                    using (var connection =
+                                           new MySql.Data.MySqlClient.MySqlConnection(
+                                               DatabaseManager.MySql_ConnectionString))
+                                    {
+                                        var deleteQuery = $"DELETE FROM `{MySql_TableName}`;";
+                                        await Dapper.SqlMapper.ExecuteAsync(connection, deleteQuery);
+
+                                        foreach (var playerGarage in MigrateCollection)
+                                        {
+                                            var serialized = playerGarage.GarageContent.Serialize();
+                                            var garageContent = serialized.ToBase64();
+                                            var parameter = new Dapper.DynamicParameters();
+                                            parameter.Add("@Id", playerGarage.Id, DbType.Int32, ParameterDirection.Input);
+                                            parameter.Add("@SteamId", playerGarage.SteamId, DbType.String,
+                                                ParameterDirection.Input);
+                                            parameter.Add("@VehicleName", playerGarage.VehicleName, DbType.String,
+                                                ParameterDirection.Input);
+                                            parameter.Add("@GarageContent", garageContent ?? string.Empty, DbType.String,
+                                                ParameterDirection.Input);
+                                            var insertQuery =
+                                                $"INSERT INTO `{MySql_TableName}` (`Id`, `SteamId`, `VehicleName`, `GarageContent`) " +
+                                                "VALUES (@Id, @SteamId, @VehicleName, @GarageContent);";
+                                            await Dapper.SqlMapper.ExecuteAsync(connection, insertQuery, parameter);
+                                        }
+                                    }
+
+                                    break;
+                                }
                             default:
                                 throw new ArgumentOutOfRangeException(nameof(to), to, null);
                         }
@@ -501,20 +545,24 @@ namespace RFGarage.DatabaseManagers
                         switch (to)
                         {
                             case EDatabase.LITEDB:
-                                using (var db =
-                                       new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
                                 {
-                                    var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                                    await col.DeleteAllAsync();
-                                    await col.InsertBulkAsync(MigrateCollection);
-                                }
+                                    using (var db =
+                                           new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
+                                    {
+                                        var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
+                                        await col.DeleteAllAsync();
+                                        await col.InsertBulkAsync(MigrateCollection);
+                                    }
 
-                                break;
+                                    break;
+                                }
                             case EDatabase.JSON:
-                                Json_DataStore =
-                                    new JsonDataStore<List<PlayerGarage>>(Plugin.Inst.Directory, Json_FileName);
-                                await Json_DataStore.SaveAsync(MigrateCollection, Plugin.Conf.JsonFormatting);
-                                break;
+                                {
+                                    Json_DataStore =
+                                        new JsonDataStore<List<PlayerGarage>>(Plugin.Inst.Directory, Json_FileName);
+                                    await Json_DataStore.SaveAsync(MigrateCollection, Plugin.Conf.JsonFormatting);
+                                    break;
+                                }
                             default:
                                 throw new ArgumentOutOfRangeException(nameof(to), to, null);
                         }
