@@ -46,7 +46,7 @@ namespace RFGarage.Commands
             if (vehicle == null)
             {
                 var raycastInfo = await ThreadTool.RunOnGameThreadAsync(() =>
-                    RaycastInfo.FromPlayerLook(player.Player, RayMasks.VEHICLE));
+                    RaycastInfo.FromPlayerLook(player.Player, RayMasks.VEHICLE, RFGarage.Plugin.Conf.VehicleAddDist));
                 if (raycastInfo?.Vehicle == null)
                 {
                     await context.ReplyAsync(VehicleUtil.TranslateRich(EResponse.NO_VEHICLE_INPUT.ToString()),

@@ -18,6 +18,7 @@ namespace RFGarage
         public bool AutoAddOnDrown;
         public bool AutoGarageOnLeave_IgnoreMaxStorage;
         public string AutoAddOnDrownPermission;
+        public float VehicleAddDist;
         public float AutoGarageOnLeave;
         public string Permission_Ignore_AutoGarageOnLeave;
         public bool AllowTrain;
@@ -38,6 +39,7 @@ namespace RFGarage
             AutoAddOnDrown = true;
             AutoAddOnDrownPermission = "garagedrown";
             AutoGarageOnLeave_IgnoreMaxStorage = true;
+            VehicleAddDist = float.MaxValue;
             AutoGarageOnLeave = -1;
             Permission_Ignore_AutoGarageOnLeave = "noautogarage";
             AllowTrain = false;
