@@ -65,3 +65,17 @@ A RocketMod / LDM plugin to save/load vehicle to/from a virtual garage
 ) \>0 = seconds until automatic gadd
 
 `<GarageSlotPermissionPrefix>garageslot</GarageSlotPermissionPrefix>`: **garageslot.size**, so if a player has **garageslot.15**, they will be able to store 15 vehicles in their garage.
+
+Available values for `MessageColor`: 
+- `red`
+- `cyan`
+- `blue`
+- `green`
+- `yellow`
+- `magenta`
+- `clear` (white-ish?)
+- `black`
+- `white`
+- `gray` / `grey`
+- `rocket` = RGB(90, 206, 205)
+- You can also use hex, like `3D6AF2` or `#3D6AF2`
