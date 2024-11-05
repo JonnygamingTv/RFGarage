@@ -18,6 +18,10 @@ namespace RFGarage.Utils
             {
                 if (drop.interactable is InteractableStorage storage)
                     storage.items.clear();
+                else if(drop.interactable is InteractableMannequin storage2)
+                {
+                    storage2.clearClothes();
+                }
 
                 BarricadeManager.tryGetPlant(vehicle.transform, out var x, out var y, out var plant, out _);
                 BarricadeManager.destroyBarricade(drop, x, y, plant);
