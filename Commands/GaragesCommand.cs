@@ -56,7 +56,7 @@ namespace RFGarage.Commands
                 if (playerGarage == null) continue;
                 await context.ReplyAsync(
                     VehicleUtil.TranslateRich(EResponse.GARAGE_LIST.ToString(), ++count, playerGarage.VehicleName,
-                        playerGarage.GarageContent.Id, playerGarage.GarageContent.GetVehicleAsset().vehicleName),
+                        playerGarage.GarageContent.Id, playerGarage.GarageContent.GetVehicleAsset()?.vehicleName),
                     RFGarage.Plugin.MsgColor, RFGarage.Plugin.Conf.MessageIconUrl);
             }
 

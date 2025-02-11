@@ -31,7 +31,7 @@ namespace RFGarage.Commands
                 return;
             }
 
-            var player = (UnturnedPlayer) context.Player;
+            UnturnedPlayer player = (UnturnedPlayer) context.Player;
 
             if (RFGarage.Plugin.Inst.IsProcessingGarage.TryGetValue(player.CSteamID.m_SteamID, out var lastProcessing) &&
                 lastProcessing.HasValue && (DateTime.Now - lastProcessing.Value).TotalSeconds <= 1)
@@ -43,15 +43,15 @@ namespace RFGarage.Commands
 
             RFGarage.Plugin.Inst.IsProcessingGarage[player.CSteamID.m_SteamID] = null;
             Models.PlayerGarage playerGarage = null;
-            var vehicleName = string.Join(" ", context.CommandRawArguments);
+            string vehicleName = string.Join(" ", context.CommandRawArguments);
             if (byte.TryParse(vehicleName, out byte ind))
             {
                 --ind;
-                var fullGarage = await GarageManager.Get(player.CSteamID.m_SteamID);
+                System.Collections.Generic.List<Models.PlayerGarage> fullGarage = await GarageManager.Get(player.CSteamID.m_SteamID);
                 if (ind < fullGarage.Count) playerGarage = fullGarage[ind];
                 else playerGarage = fullGarage.Find(x =>x.VehicleName.ToLower().Contains(vehicleName));
             }
-            if(playerGarage == null)
+            if(playerGarage == null || playerGarage.GarageContent == null)
             {
                 playerGarage = await GarageManager.Get(player.CSteamID.m_SteamID, vehicleName);
                 if (playerGarage == null)
@@ -65,8 +65,8 @@ namespace RFGarage.Commands
             await DatabaseManager.Queue.Enqueue(async () => await GarageManager.DeleteAsync(playerGarage.Id))!;
 
             //Vehicle spawned position, based on player
-            var pTransform = player.Player.transform;
-            var point = pTransform.position + pTransform.forward * 6f;
+            Transform pTransform = player.Player.transform;
+            Vector3 point = pTransform.position + pTransform.forward * 6f;
             point += Vector3.up * 12f;
             await ThreadTool.RunOnGameThreadAsync(() =>
             {
@@ -77,7 +77,7 @@ namespace RFGarage.Commands
             });
             await context.ReplyAsync(
                 VehicleUtil.TranslateRich(EResponse.GARAGE_RETRIEVE.ToString(),
-                    playerGarage.GarageContent.GetVehicleAsset().vehicleName),
+                    playerGarage.GarageContent.GetVehicleAsset()?.vehicleName),
                 RFGarage.Plugin.MsgColor, RFGarage.Plugin.Conf.MessageIconUrl);
         }
     }
