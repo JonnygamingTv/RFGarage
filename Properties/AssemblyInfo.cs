@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RFRocketLibrary")]
+[assembly: AssemblyTitle("RFGarage")]
 [assembly: AssemblyDescription("RiceField Plugins")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("RiceField Plugins")]
-[assembly: AssemblyProduct("RFRocketLibrary")]
-[assembly: AssemblyCopyright("Copyright © RiceField Plugins 2022")]
+[assembly: AssemblyProduct("RFGarage")]
+[assembly: AssemblyCopyright("Copyright © RiceField Plugins 2021, JonHosting 2024")]
 [assembly: AssemblyTrademark("RiceField Plugins")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1FC506DB-EC59-4DAC-B905-37EEDF35DC1F")]
+[assembly: Guid("6BD414D3-70FB-4459-ACCD-49973E18547D")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.2.0")]
-[assembly: AssemblyFileVersion("1.0.2.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
