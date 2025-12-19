@@ -50,7 +50,6 @@ namespace RFGarage
                 {
                     DependencyUtil.Load(EDependency.NewtonsoftJson);
                     DependencyUtil.Load(EDependency.LiteDB);
-                    DependencyUtil.Load(EDependency.LiteDBAsync);
                     DependencyUtil.Load(EDependency.Dapper);
                     DependencyUtil.Load(EDependency.MySqlData);
                 }

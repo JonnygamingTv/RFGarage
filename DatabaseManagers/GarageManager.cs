@@ -16,13 +16,12 @@ namespace RFGarage.DatabaseManagers
     public static class GarageManager
     {
         internal static bool Ready { get; set; }
+        private static readonly string LiteDB_TableName = "garage";
+        private static readonly string Json_FileName = "garage.json";
         private static List<PlayerGarage> Json_Collection { get; set; } = new List<PlayerGarage>();
         private static List<PlayerGarage> MigrateCollection { get; set; } = new List<PlayerGarage>();
-
-        private static readonly string LiteDB_TableName = "garage";
-
-        private static readonly string Json_FileName = "garage.json";
         private static JsonDataStore<List<PlayerGarage>> Json_DataStore { get; set; }
+        private static LiteDbWrapper LiteDB_wrap {get; set;}
 
         private static string MySql_TableName => $"{DatabaseManager.MySql_TableName}";
 
@@ -114,8 +113,9 @@ namespace RFGarage.DatabaseManagers
 
         private static void LiteDB_Init()
         {
-            using (var db = new LiteDB.LiteDatabase(DatabaseManager.LiteDB_ConnectionString,null))
-            {
+            LiteDB_wrap?.Dispose();
+            LiteDB_wrap = new LiteDbWrapper(DatabaseManager.LiteDB_ConnectionString);
+            LiteDB_wrap.RunRead(db => {
                 var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                 if (db.UserVersion == 0)
                 {
@@ -126,7 +126,7 @@ namespace RFGarage.DatabaseManagers
 
                     db.UserVersion = 1;
                 }
-            }
+            });
         }
 
         private static async Task<List<PlayerGarage>> LiteDB_LoadAllAsync()
@@ -134,13 +134,11 @@ namespace RFGarage.DatabaseManagers
             try
             {
                 var result = new List<PlayerGarage>();
-                using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
-                {
+                await LiteDB_wrap.RunReadAsync(db => { 
                     var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                    var all = await col.FindAllAsync();
+                    var all = col.FindAll();
                     result.AddRange(all);
-                }
-
+                });
                 return result;
             }
             catch (Exception e)
@@ -192,11 +190,10 @@ namespace RFGarage.DatabaseManagers
                 {
                     case EDatabase.LITEDB:
                         {
-                            using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
-                            {
+                            return await LiteDB_wrap.RunWriteAsync(db => {
                                 var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                                return await col.InsertAsync(playerGarage);
-                            }
+                                return col.Insert(playerGarage);
+                            });
                         }
                     case EDatabase.JSON:
                         {
@@ -250,14 +247,13 @@ namespace RFGarage.DatabaseManagers
                         }
                     case EDatabase.LITEDB:
                         {
-                            using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
-                            {
+                            return await LiteDB_wrap.RunReadAsync(db => {
                                 var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                                var result = await col.Query()
-                                    .Where(x => x.SteamId == steamId).ToListAsync();
+                                var result = col.Query()
+                                    .Where(x => x.SteamId == steamId).ToList();
                                 return result?.FirstOrDefault(x =>
                                     x.VehicleName.ToLower().Contains(vehicleName.ToLower()));
-                            }
+                            });
                         }
                     case EDatabase.MYSQL:
                         {
@@ -307,12 +303,10 @@ namespace RFGarage.DatabaseManagers
                         }
                     case EDatabase.LITEDB:
                         {
-                            // var mapper = new LiteDB.BsonMapper();
-                            using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
-                            {
+                            return await LiteDB_wrap.RunReadAsync(db => {
                                 var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                                return await col.Query().Where(x => x.SteamId == steamId).ToListAsync();
-                            }
+                                return col.Query().Where(x => x.SteamId == steamId).ToList();
+                            });
                         }
                     case EDatabase.MYSQL:
                         {
@@ -362,11 +356,10 @@ namespace RFGarage.DatabaseManagers
                         }
                     case EDatabase.LITEDB:
                         {
-                            using (var db = new LiteDB.LiteDatabase(DatabaseManager.LiteDB_ConnectionString, null))
-                            {
+                            return LiteDB_wrap.RunRead(db => {
                                 var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
                                 return col.Count(x => x.SteamId == steamId);
-                            }
+                            });
                         }
                     case EDatabase.MYSQL:
                         {
@@ -404,12 +397,10 @@ namespace RFGarage.DatabaseManagers
                         }
                     case EDatabase.LITEDB:
                         {
-                            using (var db = new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
-                            {
+                            await LiteDB_wrap.RunWriteAsync(db => {
                                 var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                                await col.DeleteAsync(id);
-                            }
-
+                                col.Delete(id);
+                            });
                             break;
                         }
                     case EDatabase.MYSQL:
@@ -494,13 +485,11 @@ namespace RFGarage.DatabaseManagers
                         {
                             case EDatabase.LITEDB:
                                 {
-                                    using (var db =
-                                           new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
-                                    {
+                                    await LiteDB_wrap.RunWriteAsync(db => {
                                         var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                                        await col.DeleteAllAsync();
-                                        await col.InsertBulkAsync(MigrateCollection);
-                                    }
+                                        col.DeleteAll();
+                                        col.InsertBulk(MigrateCollection);
+                                    });
 
                                     break;
                                 }
@@ -546,13 +535,11 @@ namespace RFGarage.DatabaseManagers
                         {
                             case EDatabase.LITEDB:
                                 {
-                                    using (var db =
-                                           new LiteDB.Async.LiteDatabaseAsync(DatabaseManager.LiteDB_ConnectionString, null))
-                                    {
+                                    await LiteDB_wrap.RunWriteAsync(db => {
                                         var col = db.GetCollection<PlayerGarage>(LiteDB_TableName);
-                                        await col.DeleteAllAsync();
-                                        await col.InsertBulkAsync(MigrateCollection);
-                                    }
+                                        col.DeleteAll();
+                                        col.InsertBulk(MigrateCollection);
+                                    });
 
                                     break;
                                 }

@@ -2,11 +2,9 @@ D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\RFGarage.
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Assembly-CSharp.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\com.rlabrecque.steamworks.net.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Dapper.dll
-D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\LiteDB.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\litedbasync.0.0.11.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\MySql.Data.8.0.25.0.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Newtonsoft.Json.v13.0.2.27524.dll
-D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\RFRocketLibrary.1.0.2.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Rocket.API.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Rocket.Core.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Rocket.Unturned.dll
@@ -96,3 +94,8 @@ D:\downloads\RFGarage-master-toModify\RFGarage-master\obj\ReleasePunch\RFGarage.
 D:\downloads\RFGarage-master-toModify\RFGarage-master\obj\ReleasePunch\RFGarage.csproj.CoreCompileInputs.cache
 D:\downloads\RFGarage-master-toModify\RFGarage-master\obj\ReleasePunch\RFGarage.csproj.CopyComplete
 D:\downloads\RFGarage-master-toModify\RFGarage-master\obj\ReleasePunch\RFGarage.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\LiteDB.v5.0.11.0.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\RFRocketLibrary.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\0Harmony.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\RFRocketLibrary.pdb
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\0Harmony.xml
