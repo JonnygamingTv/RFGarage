@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1FC506DB-EC59-4DAC-B905-37EEDF35DC1F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RFRocketLibrary</RootNamespace>
+    <AssemblyName>RFRocketLibrary</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'La Phoenix|AnyCPU' ">
+    <OutputPath>bin\La Phoenix\</OutputPath>
+    <DefineConstants>LP</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\Harmony.2.2.2.0\net472\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>F:\SteamLibrary\steamapps\common\Unturned\Unturned_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="com.rlabrecque.steamworks.net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>F:\SteamLibrary\steamapps\common\Unturned\Unturned_Data\Managed\com.rlabrecque.steamworks.net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>F:\SteamLibrary\steamapps\common\Unturned\Unturned_Data\Managed\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Rocket.API">
+      <HintPath>F:\SteamLibrary\steamapps\common\Unturned\Extras\Rocket.Unturned\Rocket.API.dll</HintPath>
+    </Reference>
+    <Reference Include="Rocket.Core">
+      <HintPath>F:\SteamLibrary\steamapps\common\Unturned\Extras\Rocket.Unturned\Rocket.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Rocket.Unturned">
+      <HintPath>F:\SteamLibrary\steamapps\common\Unturned\Extras\Rocket.Unturned\Rocket.Unturned.dll</HintPath>
+    </Reference>
+    <Reference Include="SDG.NetTransport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>F:\SteamLibrary\steamapps\common\Unturned\Unturned_Data\Managed\SDG.NetTransport.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\Libraries\RocketMod\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>F:\SteamLibrary\steamapps\common\Unturned\Unturned_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>F:\SteamLibrary\steamapps\common\Unturned\Unturned_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>F:\SteamLibrary\steamapps\common\Unturned\Unturned_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="API\Interfaces\ISerialQueue.cs" />
+    <Compile Include="Constants\DependencyFullName.cs" />
+    <Compile Include="Constants\DependencyIntegrity.cs" />
+    <Compile Include="Constants\DependencyLink.cs" />
+    <Compile Include="Enum\EAvatarProvider.cs" />
+    <Compile Include="Enum\EDependency.cs" />
+    <Compile Include="Events\EventBus.cs" />
+    <Compile Include="Events\UnturnedPatchEvent.cs" />
+    <Compile Include="Events\RocketEvent.cs" />
+    <Compile Include="Events\UnturnedEvent.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookAllowedMention.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookAttachment.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookAuthor.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookEmbed.cs" />
+    <Compile Include="Helpers\DiscordWebhook\Color.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookField.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookFooter.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookImage.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookMessage.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookProvider.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookService.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookThumbnail.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookUtil.cs" />
+    <Compile Include="Helpers\DiscordWebhook\WebhookVideo.cs" />
+    <Compile Include="Helpers\Discord\DiscordWebHook.cs" />
+    <Compile Include="Helpers\Discord\Structs.cs" />
+    <Compile Include="Helpers\Discord\Utils.cs" />
+    <Compile Include="Helpers\ReflectionHelper.cs" />
+    <Compile Include="Helpers\RocketExtensions\Extensions.cs" />
+    <Compile Include="Helpers\RocketExtensions\Interfaces\IStringParser.cs" />
+    <Compile Include="Helpers\RocketExtensions\Models\ArgumentList.cs" />
+    <Compile Include="Helpers\RocketExtensions\Models\CommandContext.cs" />
+    <Compile Include="Helpers\RocketExtensions\Models\CooldownManager.cs" />
+    <Compile Include="Helpers\RocketExtensions\Models\EParseResult.cs" />
+    <Compile Include="Helpers\RocketExtensions\Models\Exceptions\ArgumentMissingException.cs" />
+    <Compile Include="Helpers\RocketExtensions\Models\Exceptions\InvalidArgumentException.cs" />
+    <Compile Include="Helpers\RocketExtensions\Models\Exceptions\PlayerNotFoundException.cs" />
+    <Compile Include="Helpers\RocketExtensions\Models\Exceptions\PluginNotFoundException.cs" />
+    <Compile Include="Helpers\RocketExtensions\Models\FastTaskDispatcher.cs" />
+    <Compile Include="Helpers\RocketExtensions\Models\LDMPlayer.cs" />
+    <Compile Include="Helpers\RocketExtensions\Models\RunningCommand.cs" />
+    <Compile Include="Helpers\RocketExtensions\Models\StringTypeConverter.cs" />
+    <Compile Include="Helpers\RocketExtensions\Plugins\CommandAliasesAttribute.cs" />
+    <Compile Include="Helpers\RocketExtensions\Plugins\CommandActorAttribute.cs" />
+    <Compile Include="Helpers\RocketExtensions\Plugins\CommandInfoAttribute.cs" />
+    <Compile Include="Helpers\RocketExtensions\Plugins\CommandNameAttribute.cs" />
+    <Compile Include="Helpers\RocketExtensions\Plugins\ExtendedRocketPlugin.cs" />
+    <Compile Include="Helpers\RocketExtensions\Plugins\ExtendedRocketPluginBackup.cs" />
+    <Compile Include="Helpers\RocketExtensions\Plugins\CommandPermissionsAttribute.cs" />
+    <Compile Include="Helpers\RocketExtensions\Plugins\PluginConfig.cs" />
+    <Compile Include="Helpers\RocketExtensions\Plugins\RocketCommand.cs" />
+    <Compile Include="Helpers\RocketExtensions\Utilities\ColorReformatter.cs" />
+    <Compile Include="Helpers\RocketExtensions\Utilities\ThreadTool.cs" />
+    <Compile Include="Hooks\RFPlayerLibraryHook.cs" />
+    <Compile Include="Hooks\UconomyPremiumHook.cs" />
+    <Compile Include="Library.cs" />
+    <Compile Include="Models\FaceWrapper.cs" />
+    <Compile Include="Models\KeyListener.cs" />
+    <Compile Include="Models\PlaneWrapper.cs" />
+    <Compile Include="Models\RaycastLimb.cs" />
+    <Compile Include="Models\SteamWebApi.cs" />
+    <Compile Include="Models\QuaternionWrapper.cs" />
+    <Compile Include="Models\RaycastInfo.cs" />
+    <Compile Include="Models\SerialQueue.cs" />
+    <Compile Include="Managers\AnimalManager.cs" />
+    <Compile Include="Helpers\ColorHelper.cs" />
+    <Compile Include="Hooks\AviEconomyHook.cs" />
+    <Compile Include="Hooks\UconomyHook.cs" />
+    <Compile Include="Models\Vector2Wrapper.cs" />
+    <Compile Include="Models\Vector3ProjectionWrapper.cs" />
+    <Compile Include="Patches\UnturnedPatch.cs" />
+    <Compile Include="Storages\JsonDataStore.cs" />
+    <Compile Include="Helpers\ChatHelper.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Models\BarricadeWrapper.cs" />
+    <Compile Include="Models\InventoryWrapper.cs" />
+    <Compile Include="Models\ItemJarWrapper.cs" />
+    <Compile Include="Models\ItemsWrapper.cs" />
+    <Compile Include="Models\ItemWrapper.cs" />
+    <Compile Include="Models\QuartenionWrapper.cs" />
+    <Compile Include="Models\SteamGroup.cs" />
+    <Compile Include="Models\SteamGroupDetails.cs" />
+    <Compile Include="Models\SteamProfileGroup.cs" />
+    <Compile Include="Models\SteamProfile.cs" />
+    <Compile Include="Models\StructureWrapper.cs" />
+    <Compile Include="Models\Vector3Wrapper.cs" />
+    <Compile Include="Models\VehicleWrapper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Storages\XmlDataStore.cs" />
+    <Compile Include="Utils\ActionUtil.cs" />
+    <Compile Include="Utils\AssetExtensions.cs" />
+    <Compile Include="Utils\AssetUtil.cs" />
+    <Compile Include="Utils\BarricadeUtil.cs" />
+    <Compile Include="Utils\ByteArrayExtensions.cs" />
+    <Compile Include="Utils\DependencyUtil.cs" />
+    <Compile Include="Utils\EnumerableExtensions.cs" />
+    <Compile Include="Utils\InventoryUtil.cs" />
+    <Compile Include="Utils\MathUtils.cs" />
+    <Compile Include="Utils\PlayerExtensions.cs" />
+    <Compile Include="Utils\SteamUtil.cs" />
+    <Compile Include="Utils\StringExtensions.cs" />
+    <Compile Include="Utils\StructureUtil.cs" />
+    <Compile Include="Utils\TaskExtensions.cs" />
+    <Compile Include="Utils\UIUtil.cs" />
+    <Compile Include="Utils\VehicleUtil.cs" />
+    <Compile Include="Utils\ZombieUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+</Project>
