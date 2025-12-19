@@ -32,7 +32,7 @@ namespace RFGarage
             Enabled = true;
             Database = EDatabase.LITEDB;
             JsonFormatting = Newtonsoft.Json.Formatting.Indented;
-            MySqlConnectionString = "SERVER=127.0.0.1;DATABASE=unturned;UID=root;PASSWORD=123456;PORT=3306;TABLENAME=rfgarage;";
+            MySqlConnectionString = "SERVER=127.0.0.1;DATABASE=unturned;UID=root;PASSWORD=123456;PORT=3306;Protocol=unix;UnixSocket=/var/run/mysqld/mysqld.sock;TABLENAME=rfgarage;";
             MessageColor = "magenta";
             MessageIconUrl = "https://cdn.jsdelivr.net/gh/RiceField-Plugins/UnturnedImages@images/plugin/Announcer.png";
             AutoClearDestroyedVehicles = true;
