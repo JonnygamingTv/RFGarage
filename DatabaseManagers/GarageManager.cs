@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using MySqlConnector;
 using RFGarage.Enums;
 using RFGarage.Models;
 using RFGarage.Utils;
@@ -98,7 +99,7 @@ namespace RFGarage.DatabaseManagers
             try
             {
                 using (var connection =
-                       new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
+                       new MySqlConnection(DatabaseManager.MySql_ConnectionString))
                 {
                     Dapper.SqlMapper.Execute(connection,
                         $"CREATE TABLE IF NOT EXISTS `{tableName}` ({createTableQuery});");
@@ -155,7 +156,7 @@ namespace RFGarage.DatabaseManagers
             {
                 var result = new List<PlayerGarage>();
                 using (var connection =
-                       new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
+                       new MySqlConnection(DatabaseManager.MySql_ConnectionString))
                 {
                     var loadQuery = $"SELECT * FROM `{MySql_TableName}`;";
                     var databases = await Dapper.SqlMapper.QueryAsync(connection, loadQuery);
@@ -205,7 +206,7 @@ namespace RFGarage.DatabaseManagers
                     case EDatabase.MYSQL:
                         {
                             using (var connection =
-                                   new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
+                                   new MySqlConnection(DatabaseManager.MySql_ConnectionString))
                             {
                                 var serialized = playerGarage.GarageContent.Serialize();
                                 var garageContent = serialized.ToBase64();
@@ -258,7 +259,7 @@ namespace RFGarage.DatabaseManagers
                     case EDatabase.MYSQL:
                         {
                             using (var connection =
-                                   new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
+                                   new MySqlConnection(DatabaseManager.MySql_ConnectionString))
                             {
                                 var query =
                                     $"SELECT * FROM `{MySql_TableName}` WHERE `SteamId` = @SteamId AND LOCATE('{vehicleName}', `VehicleName`) > 0;";
@@ -311,7 +312,7 @@ namespace RFGarage.DatabaseManagers
                     case EDatabase.MYSQL:
                         {
                             using (var connection =
-                                   new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
+                                   new MySqlConnection(DatabaseManager.MySql_ConnectionString))
                             {
                                 var query =
                                     $"SELECT * FROM `{MySql_TableName}` WHERE `SteamId` = @SteamId;";
@@ -364,7 +365,7 @@ namespace RFGarage.DatabaseManagers
                     case EDatabase.MYSQL:
                         {
                             using (var connection =
-                                   new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
+                                   new MySqlConnection(DatabaseManager.MySql_ConnectionString))
                             {
                                 var query =
                                     $"SELECT COUNT(`Id`) FROM `{MySql_TableName}` WHERE `SteamId` = @SteamId;";
@@ -406,7 +407,7 @@ namespace RFGarage.DatabaseManagers
                     case EDatabase.MYSQL:
                         {
                             using (var connection =
-                                   new MySql.Data.MySqlClient.MySqlConnection(DatabaseManager.MySql_ConnectionString))
+                                   new MySqlConnection(DatabaseManager.MySql_ConnectionString))
                             {
                                 await Dapper.SqlMapper.ExecuteAsync(connection,
                                     $"DELETE FROM `{MySql_TableName}` WHERE `Id` = @Id;", new { Id = id });
@@ -446,7 +447,7 @@ namespace RFGarage.DatabaseManagers
                                 {
                                     MySQL_CreateTable(MySql_TableName, MySql_CreateTableQuery);
                                     using (var connection =
-                                           new MySql.Data.MySqlClient.MySqlConnection(
+                                           new MySqlConnection(
                                                DatabaseManager.MySql_ConnectionString))
                                     {
                                         var deleteQuery = $"DELETE FROM `{MySql_TableName}`;";
@@ -497,7 +498,7 @@ namespace RFGarage.DatabaseManagers
                                 {
                                     MySQL_CreateTable(MySql_TableName, MySql_CreateTableQuery);
                                     using (var connection =
-                                           new MySql.Data.MySqlClient.MySqlConnection(
+                                           new MySqlConnection(
                                                DatabaseManager.MySql_ConnectionString))
                                     {
                                         var deleteQuery = $"DELETE FROM `{MySql_TableName}`;";

@@ -2,7 +2,6 @@ D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\RFGarage.
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Assembly-CSharp.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\com.rlabrecque.steamworks.net.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Dapper.dll
-D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\litedbasync.0.0.11.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\MySql.Data.8.0.25.0.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Newtonsoft.Json.v13.0.2.27524.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Rocket.API.dll
@@ -36,7 +35,6 @@ D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngi
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\HighlightingSystem.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\AstarPathfindingProject.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.WindModule.dll
-D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\StandardAssets.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Unturned.LiveConfig.Runtime.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.UnityWebRequestModule.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.JSONSerializeModule.dll
@@ -68,7 +66,6 @@ D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngi
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.GridModule.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.SubsystemsModule.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.LocalizationModule.dll
-D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.UNETModule.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.UnityWebRequestAssetBundleModule.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.UnityWebRequestAudioModule.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.UnityWebRequestWWWModule.dll
@@ -80,14 +77,10 @@ D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngi
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.TextCoreFontEngineModule.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.TextCoreTextEngineModule.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.SpriteShapeModule.dll
-D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.UIElementsNativeModule.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.XRModule.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.ARModule.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.InputModule.dll
-D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Pathfinding.JsonFx.dll
-D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Pathfinding.ClipperLib.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Pathfinding.Ionic.Zip.Reduced.dll
-D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Pathfinding.Poly2Tri.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Assembly-CSharp.xml
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\SDG.NetPak.Runtime.xml
 D:\downloads\RFGarage-master-toModify\RFGarage-master\obj\ReleasePunch\RFGarage.csproj.AssemblyReference.cache
@@ -99,3 +92,17 @@ D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\RFRocketL
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\0Harmony.dll
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\RFRocketLibrary.pdb
 D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\0Harmony.xml
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\ImageEffectsUnity5.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\ImageEffectsUnity4.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\netstandard.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.ContentLoadModule.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\UnityEngine.PropertiesModule.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\PackageTools.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Drawing.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Unity.Mathematics.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Unity.Burst.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Unity.Collections.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Clipper2Lib.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\andywiecko.BurstTriangulator.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Unity.Burst.Unsafe.dll
+D:\downloads\RFGarage-master-toModify\RFGarage-master\bin\ReleasePunch\Unity.Collections.LowLevel.ILSupport.dll
