@@ -140,20 +140,27 @@ namespace RFGarage.Commands
                 }
             }
 
-            if (vehicle.trunkItems != null && vehicle.trunkItems.getItemCount() != 0)
+            if (RFGarage.Plugin.Conf.DropAllTrunkItems)
             {
-                foreach (var blacklist in RFGarage.Plugin.Conf.Blacklists.Where(x => x.Type == EBlacklistType.ITEM))
+                await ThreadTool.RunOnGameThreadAsync(() => vehicle.dropTrunkItems());
+            }
+            else
+            {
+                if (vehicle.trunkItems != null && vehicle.trunkItems.getItemCount() != 0)
                 {
-                    if (player.HasPermission(blacklist.BypassPermission))
-                        continue;
-
-                    foreach (var asset in from itemJar in vehicle.trunkItems.items
-                             where blacklist.IdList.Contains(itemJar.item.id)
-                             select AssetUtil.GetItemAsset(itemJar.item.id))
+                    foreach (var blacklist in RFGarage.Plugin.Conf.Blacklists.Where(x => x.Type == EBlacklistType.ITEM))
                     {
-                        await context.ReplyAsync(VehicleUtil.TranslateRich(EResponse.BLACKLIST_ITEM.ToString(),
-                            asset.itemName, asset.id), RFGarage.Plugin.MsgColor, RFGarage.Plugin.Conf.MessageIconUrl);
-                        return;
+                        if (player.HasPermission(blacklist.BypassPermission))
+                            continue;
+
+                        foreach (var asset in from itemJar in vehicle.trunkItems.items
+                                              where blacklist.IdList.Contains(itemJar.item.id)
+                                              select AssetUtil.GetItemAsset(itemJar.item.id))
+                        {
+                            await context.ReplyAsync(VehicleUtil.TranslateRich(EResponse.BLACKLIST_ITEM.ToString(),
+                                asset.itemName, asset.id), RFGarage.Plugin.MsgColor, RFGarage.Plugin.Conf.MessageIconUrl);
+                            return;
+                        }
                     }
                 }
             }

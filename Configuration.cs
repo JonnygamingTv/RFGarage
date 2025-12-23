@@ -9,6 +9,7 @@ namespace RFGarage
     {
         public bool SafeDb;
         public bool Enabled;
+        public bool DropAllTrunkItems;
         public EDatabase Database;
         public Newtonsoft.Json.Formatting JsonFormatting;
         public string MySqlConnectionString;
@@ -30,6 +31,7 @@ namespace RFGarage
         {
             SafeDb = false;
             Enabled = true;
+            DropAllTrunkItems = false;
             Database = EDatabase.LITEDB;
             JsonFormatting = Newtonsoft.Json.Formatting.Indented;
             MySqlConnectionString = "SERVER=/var/run/mysqld/mysqld.sock;Protocol=unix;DATABASE=unturned;UID=root;PASSWORD=123456;PORT=3306;TABLENAME=rfgarage;";
