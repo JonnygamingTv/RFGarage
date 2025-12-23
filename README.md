@@ -5,6 +5,7 @@ A RocketMod / LDM plugin to save/load vehicle to/from a virtual garage
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Enabled>true</Enabled>
+  <DropAllTrunkItems>false</DropAllTrunkItems>
   <Database>LITEDB</Database>
   <MySqlConnectionString>SERVER=127.0.0.1;DATABASE=unturned;UID=root;PASSWORD=123456;PORT=3306;TABLENAME=rfgarage;</MySqlConnectionString>
   <MessageColor>magenta</MessageColor>
